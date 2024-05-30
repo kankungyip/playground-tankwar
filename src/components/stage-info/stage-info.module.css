@@ -1,0 +1,101 @@
+.stage-info-wrapper {
+  margin-top: var(--space);
+  padding: 1rem;
+  background: var(--ui-white);
+  color: var(--text-primary);
+  border-radius: var(--space);
+  border: 1px solid var(--ui-black-transparent);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.row-primary {
+  margin-top: 0;
+}
+
+.group {
+  display: inline-flex;
+  flex-direction: row; /* makes columns, for each label/form group */
+  align-items: center;
+}
+
+.full-input {
+  flex: 1;
+}
+
+.name-input {
+  width: 8rem;
+}
+
+.button {
+  min-width: calc(2rem + 2px);
+  height: calc(2rem + 2px);
+  padding: 0.375rem !important;
+}
+
+.button-icon {
+  margin: auto;
+}
+
+.space {
+  margin-left: 0.2rem;
+}
+
+.toolbar-button-group {
+  display: flex;
+}
+
+.group-button-first {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.group-button {
+  border-left: none;
+  border-radius: 0;
+}
+
+.group-button-last {
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.button-text {
+  flex: auto;
+}
+
+.group-button-toggled-on .button-text {
+  color: #4c97ff;
+}
+
+.tank-image {
+  width: 1.65rem;
+}
+
+.health-progress {
+  height: 20px;
+  width: 12rem;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.health-progress::before {
+  counter-reset: progress var(--percent, 0);
+  content: counter(progress) '%\2002';
+  display: block;
+  height: 20px;
+  line-height: 20px;
+  width: calc(12rem * var(--percent, 0) / 100);
+  font-size: 12px;
+  color: var(--ui-white);
+  background: rgb(255, 102, 128);
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  border-radius: 10px;
+}

@@ -1,0 +1,13 @@
+.stage-wrapper {
+  position: relative;
+}
+
+.stage {
+  width: calc(480px + 2px);
+  height: calc(480px + 2px);
+  border: 1px solid var(--ui-black-transparent);
+  border-radius: var(--space);
+  position: relative;
+  overflow: hidden;
+  background: var(--ui-white);
+}

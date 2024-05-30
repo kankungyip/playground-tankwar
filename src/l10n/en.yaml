@@ -1,0 +1,26 @@
+tankwar.player.greenFlag: Go
+tankwar.player.stopAll: Stop
+
+tankwar.stageInfo.player: Player
+tankwar.stageInfo.nickname: Nickname
+tankwar.stageInfo.enemies: Enemies
+tankwar.stageInfo.health: Health
+tankwar.stageInfo.enemy.red: Red
+tankwar.stageInfo.enemy.yellow: Yellow
+tankwar.stageInfo.enemy.green: Green
+tankwar.stageInfo.mode.local: Local AI
+tankwar.stageInfo.mode.remote: Remote Players
+tankwar.stageInfo.ai: AI
+tankwar.stageInfo.ai.simple: Simple
+tankwar.stageInfo.ai.medium: Medium
+tankwar.stageInfo.ai.senior: Senior
+
+tankwar.blocks.motion_attack: fire in direction %1 at %2 steps
+tankwar.blocks.motion_move: forward in direction %1 at %2 % speed
+tankwar.blocks.motion_setspeed: set speed to %1 %
+tankwar.blocks.motion_stop: stop
+tankwar.blocks.motion_speed: speed
+tankwar.blocks.sensing_scanwidth: set scan width to %1
+tankwar.blocks.sensing_scan: scan for enemy in direction %1?
+tankwar.blocks.sensing_distance: measure distance of enemy in direction %1
+tankwar.blocks.sensing_health: health
