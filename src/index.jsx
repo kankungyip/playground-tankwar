@@ -1,7 +1,7 @@
 import featureImage from './feature.png';
 
 export default {
-  preview: true,
+  sortIndex: 1001,
   image: featureImage,
   name: 'Tank War',
   description: 'Program your tank and go to battle!',
