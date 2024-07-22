@@ -11,8 +11,8 @@ import * as AIs from './ai';
 export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onChangeHealth }) {
   const [canvas, setCanvas] = useState(null);
   const [currentRuntime, setCurrentRuntime] = useState(false);
-  const { fileList, selectedIndex } = useEditor();
-  const player = fileList[selectedIndex];
+  const { fileList } = useEditor();
+  const player = fileList[0];
 
   if (canvas) {
     const tanks = paperCore.project.activeLayer.children;
