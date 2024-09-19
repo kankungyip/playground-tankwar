@@ -19,7 +19,7 @@ export default function TankwarBlocksWorkspace({ addLocaleData, createLayout, op
     'zh-Hans': zhHans,
   });
 
-  const createDefaultProject = (project) => {
+  const createProject = (project) => {
     project = project ?? defaultProject;
     openProject(
       Object.assign(
@@ -30,17 +30,18 @@ export default function TankwarBlocksWorkspace({ addLocaleData, createLayout, op
       ),
     );
   };
-  createDefaultProject(project);
+  createProject(project);
 
-  const saveCurrentProject = () => {
+  const saveProject = () => {
     const canvas = document.querySelector('#blockcode-blocks-player');
     return { thumb: canvas.toDataURL() };
   };
 
   createLayout({
     mainMenu: makeMainMenu({
-      createDefaultProject,
-      saveCurrentProject,
+      createProject,
+      openProject,
+      saveProject,
     }).slice(0, 2),
 
     tabs: [
