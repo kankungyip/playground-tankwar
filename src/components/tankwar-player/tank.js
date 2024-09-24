@@ -167,14 +167,14 @@ export default class Tank {
     this.reset();
     this._running = value;
 
-    if (value) {
-      const width = this.raster.scaling.x * this.raster.width - 5;
-      this._collideTester = new paperCore.Path.Rectangle({
-        point: [this.raster.position.x - width / 2, this.raster.position.y - 5],
-        size: [width, 10],
-        applyMatrix: false,
-      });
-    }
+    // if (value) {
+    //   const width = this.raster.scaling.x * this.raster.width - 5;
+    //   this._collideTester = new paperCore.Path.Rectangle({
+    //     point: [this.raster.position.x - width / 2, this.raster.position.y - 5],
+    //     size: [width, 10],
+    //     applyMatrix: false,
+    //   });
+    // }
   }
 
   get bullseye() {
@@ -339,18 +339,18 @@ export default class Tank {
     let speed = this.speed;
     const radian = degToRad(90 - this.direction);
 
-    const height = this.raster.scaling.y * this.raster.height;
-    this._collideTester.rotation = this.raster.rotation;
-    this._collideTester.position.x = this.raster.position.x + (height / 2 + 5) * Math.cos(radian);
-    this._collideTester.position.y = this.raster.position.y - (height / 2 + 5) * Math.sin(radian);
+    // const height = this.raster.scaling.y * this.raster.height;
+    // this._collideTester.rotation = this.raster.rotation;
+    // this._collideTester.position.x = this.raster.position.x + (height / 2 + 5) * Math.cos(radian);
+    // this._collideTester.position.y = this.raster.position.y - (height / 2 + 5) * Math.sin(radian);
 
-    this.enemies.forEach((enemy) => {
-      if (enemy.util.hidden) return;
-      if (this._intersectsOrContains(this.raster, enemy) && this._intersectsOrContains(this._collideTester, enemy)) {
-        speed = 0;
-      }
-    });
-    this._currentSpeed = speed;
+    // this.enemies.forEach((enemy) => {
+    //   if (enemy.util.hidden) return;
+    //   if (this._intersectsOrContains(this.raster, enemy) && this._intersectsOrContains(this._collideTester, enemy)) {
+    //     speed = 0;
+    //   }
+    // });
+    // this._currentSpeed = speed;
 
     speed /= SPEED_RATIO;
     this.raster.position.x += speed * Math.cos(radian);

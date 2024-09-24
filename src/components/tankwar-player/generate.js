@@ -1,7 +1,7 @@
 export default (script = '', AIs = []) => `
 ${AIs.join('\n')}
 
-((tank) => {
+((target) => {
 let abort = false;
 ${script || ''}
 })(runtime.player);
