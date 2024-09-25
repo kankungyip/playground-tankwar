@@ -1,5 +1,6 @@
 {
   "name": "@blockcode/workspace-tankwar",
+  "version": "0.8.0",
   "module": "dist/index.js",
   "exports": {
     ".": {

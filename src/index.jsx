@@ -1,6 +1,8 @@
 import featureImage from './feature.png';
+import { version } from '../package.json';
 
 export default {
+  version,
   sortIndex: 1001,
   image: featureImage,
   name: 'Tank War',
