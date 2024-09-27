@@ -1,4 +1,4 @@
-import { javascriptGenerator } from '@blockcode/blocks-player';
+import { javascriptGenerator } from './generator';
 
 javascriptGenerator['sensing_scanwidth'] = (block) => {
   let code = '';

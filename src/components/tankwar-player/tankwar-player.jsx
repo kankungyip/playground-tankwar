@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
 import { BlocksPlayer, paperCore } from '@blockcode/blocks-player';
+import { javascriptGenerator } from '../../generators/javascript';
 
 import backgroundImage from './tanks/background.png';
 import Tank from './tank';
@@ -41,11 +42,19 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
             green: tanks.green.util.health,
           });
         });
+        const workspace = ScratchBlocks.getMainWorkspace();
+        if (workspace) {
+          workspace.addChangeListener(onRequestStop);
+        }
         setCurrentRuntime(runtime);
       }
     } else {
       if (currentRuntime) {
         // stop
+        const workspace = ScratchBlocks.getMainWorkspace();
+        if (workspace) {
+          workspace.removeChangeListener(onRequestStop);
+        }
         currentRuntime.stop().then(() => {
           onChangeHealth({
             player: 100,
@@ -101,6 +110,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
     <BlocksPlayer
       width={`480px`}
       height={`480px`}
+      javascriptGenerator={javascriptGenerator}
       onSetup={handleSetup}
     />
   );

@@ -4,8 +4,6 @@ import '../blocks/events';
 import '../blocks/motion';
 import '../blocks/sensing';
 
-import '../generators/javascript';
-
 const motion = () => `
   <category name="%{BKY_CATEGORY_MOTION}" id="motion" colour="#4C97FF" secondaryColour="#3373CC">
     <block type="motion_attack">

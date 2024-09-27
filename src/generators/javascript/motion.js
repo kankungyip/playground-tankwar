@@ -1,4 +1,4 @@
-import { javascriptGenerator } from '@blockcode/blocks-player';
+import { javascriptGenerator } from './generator';
 
 const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
 
