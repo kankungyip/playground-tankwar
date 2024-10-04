@@ -8,36 +8,23 @@ import Sidebar from './components/sidebar/sidebar';
 import defaultProject from './lib/default-project';
 
 /* languages */
-import en from './l10n/en.yaml';
-import zhHans from './l10n/zh-hans.yaml';
+import locales from './l10n';
 
-export default function TankwarBlocksWorkspace({ addLocaleData, createLayout, openProject, project }) {
+export default function TankwarBlocksWorkspace({ addLocaleData, openProject }) {
   addLocaleData(blocksLocales);
+  addLocaleData(locales);
 
-  addLocaleData({
-    en,
-    'zh-Hans': zhHans,
-  });
-
-  const createProject = (project) => {
-    project = project ?? defaultProject;
-    openProject(
-      Object.assign(
-        {
-          selectedFileId: project.fileList[0].id,
-        },
-        project,
-      ),
-    );
+  const createProject = () => {
+    openProject(Object.assign(defaultProject));
   };
-  createProject(project);
+  createProject();
 
   const saveProject = () => {
     const canvas = document.querySelector('#blockcode-blocks-player');
     return { thumb: canvas.toDataURL() };
   };
 
-  createLayout({
+  return {
     mainMenu: makeMainMenu({
       createProject,
       openProject,
@@ -63,5 +50,5 @@ export default function TankwarBlocksWorkspace({ addLocaleData, createLayout, op
     tutorials: false,
 
     canEditProjectName: true,
-  });
+  };
 }
