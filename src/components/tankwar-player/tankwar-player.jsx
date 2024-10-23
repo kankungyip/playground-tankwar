@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import { useEditor } from '@blockcode/core';
+import { ScratchBlocks } from '@blockcode/blocks-editor';
 import { BlocksPlayer, paperCore } from '@blockcode/blocks-player';
 import { javascriptGenerator } from '../../generators/javascript';
 
@@ -110,7 +111,7 @@ export function TankwarPlayer({ playing, enemies, enemiesAI, onRequestStop, onCh
     <BlocksPlayer
       width={`480px`}
       height={`480px`}
-      javascriptGenerator={javascriptGenerator}
+      generator={javascriptGenerator}
       onSetup={handleSetup}
     />
   );

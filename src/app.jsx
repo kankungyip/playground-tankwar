@@ -19,7 +19,7 @@ export default function TankwarBlocksWorkspace({ addLocaleData, openProject }) {
   };
   createProject();
 
-  const saveProject = () => {
+  const saveProject = (data) => {
     const canvas = document.querySelector('#blockcode-blocks-player');
     return { thumb: canvas.toDataURL() };
   };

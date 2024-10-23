@@ -1,5 +1,6 @@
 import { useLocale } from '@blockcode/core';
 import { codeTab } from '@blockcode/workspace-blocks/app';
+import { javascriptGenerator } from '../../generators/javascript';
 
 import makeToolboxXML from '../../lib/make-toolbox-xml';
 
@@ -27,6 +28,7 @@ export default function BlocksEditor() {
       disableExtension
       messages={messages}
       toolbox={toolbox}
+      generators={[javascriptGenerator]}
     />
   );
 }
