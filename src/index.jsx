@@ -6,7 +6,7 @@ export default {
   sortIndex: 1001,
   image: featureImage,
   name: 'AI Tank War',
-  description: 'Program your tank and go to battle!',
+  description: 'Programming your tank and go battle!',
   collaborator: 'Yeqin Gong',
   blocksRequired: true,
 
@@ -14,12 +14,12 @@ export default {
   translations: {
     en: {
       name: 'AI Tank War',
-      description: 'Program your tank and go to battle!',
+      description: 'Programming your tank and go battle!',
       collaborator: 'Yeqin Gong',
     },
     'zh-Hans': {
       name: 'AI 坦克大战',
-      description: '编程你的坦克，加入新的战斗！',
+      description: '编程你的坦克，加入新战斗！',
       collaborator: '龚业勤',
     },
   },
