@@ -1,7 +1,5 @@
 import { javascriptGenerator } from './generator';
 
-const AWAIT_ABORT = 'if (abort || !runtime.running) break;\n';
-
 javascriptGenerator['motion_attack'] = (block) => {
   let code = '';
   if (javascriptGenerator.STATEMENT_PREFIX) {
@@ -9,7 +7,7 @@ javascriptGenerator['motion_attack'] = (block) => {
   }
   const directionValue = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE) || 0;
   const distanceValue = javascriptGenerator.valueToCode(block, 'DISTANCE', javascriptGenerator.ORDER_NONE) || 100;
-  code += `await target.util.attack(${directionValue}, ${distanceValue});\n${AWAIT_ABORT}`;
+  code += `await target.util.attack(${directionValue}, ${distanceValue});\n${this.AWAIT_ABORT}`;
   return code;
 };
 
@@ -20,7 +18,7 @@ javascriptGenerator['motion_move'] = (block) => {
   }
   const directionValue = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE) || 0;
   const speedValue = javascriptGenerator.valueToCode(block, 'SPEED', javascriptGenerator.ORDER_NONE) || 100;
-  code += `await target.util.move(${directionValue}, ${speedValue});\n${AWAIT_ABORT}`;
+  code += `await target.util.move(${directionValue}, ${speedValue});\n${this.AWAIT_ABORT}`;
   return code;
 };
 
@@ -30,7 +28,7 @@ javascriptGenerator['motion_turnright'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE) || 0;
-  code += `await target.util.turnRight(${degreesCode});\n${AWAIT_ABORT}`;
+  code += `await target.util.turnRight(${degreesCode});\n${this.AWAIT_ABORT}`;
   return code;
 };
 
@@ -40,7 +38,7 @@ javascriptGenerator['motion_turnleft'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const degreesCode = javascriptGenerator.valueToCode(block, 'DEGREES', javascriptGenerator.ORDER_NONE) || 0;
-  code += `await target.util.turnLeft(${degreesCode});\n${AWAIT_ABORT}`;
+  code += `await target.util.turnLeft(${degreesCode});\n${this.AWAIT_ABORT}`;
   return code;
 };
 
@@ -50,7 +48,7 @@ javascriptGenerator['motion_pointindirection'] = (block) => {
     code += javascriptGenerator.injectId(javascriptGenerator.STATEMENT_PREFIX, block);
   }
   const directionCode = javascriptGenerator.valueToCode(block, 'DIRECTION', javascriptGenerator.ORDER_NONE) || 0;
-  code += `await target.util.setDirection(+${directionCode});\n${AWAIT_ABORT}`;
+  code += `await target.util.setDirection(+${directionCode});\n${this.AWAIT_ABORT}`;
   return code;
 };
 

@@ -10,14 +10,16 @@ import defaultProject from './lib/default-project';
 /* languages */
 import locales from './l10n';
 
-export default function TankwarBlocksWorkspace({ addLocaleData, openProject }) {
+export default function TankwarBlocksWorkspace({ addLocaleData, openProject, useDefaultProject }) {
   addLocaleData(blocksLocales);
   addLocaleData(locales);
 
   const createProject = () => {
     openProject(Object.assign(defaultProject));
   };
-  createProject();
+  if (useDefaultProject) {
+    createProject();
+  }
 
   const saveProject = (data) => {
     const canvas = document.querySelector('#blockcode-blocks-player');
