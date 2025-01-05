@@ -20,11 +20,11 @@
 
 .green-flag:hover,
 .stop-all:hover {
-  background: var(--motion-light-transparent);
+  background: var(--theme-light-transparent);
 }
 
 .green-flag.actived {
-  background: var(--motion-transparent);
+  background: var(--theme-transparent);
 }
 
 .stop-all {

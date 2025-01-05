@@ -1,5 +1,8 @@
-tankwar.player.greenFlag: Go
+tankwar.player.greenFlag: Fight
 tankwar.player.stopAll: Stop
+
+tankwar.stage.small: Switch to small stage
+tankwar.stage.large: Switch to large stage
 
 tankwar.stageInfo.player: Player
 tankwar.stageInfo.nickname: Nickname

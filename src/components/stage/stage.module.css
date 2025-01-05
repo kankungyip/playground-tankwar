@@ -11,3 +11,8 @@
   overflow: hidden;
   background: var(--ui-white);
 }
+
+.small {
+  width: calc(480px * 0.8 + 2px);
+  height: calc(480px * 0.8 + 2px);
+}

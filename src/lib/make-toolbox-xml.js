@@ -1,11 +1,20 @@
-import { ScratchBlocks, makeToolboxXML, blockSeparator, categorySeparator } from '@blockcode/blocks-editor';
+import {
+  ScratchBlocks,
+  blockSeparator,
+  categorySeparator,
+  motionTheme,
+  sensingTheme,
+  operatorsTheme,
+} from '@blockcode/blocks';
 
+// 加载自定义/修改的积木块
 import '../blocks/events';
 import '../blocks/motion';
 import '../blocks/sensing';
 
+// 运动类需要展示的积木
 const motion = () => `
-  <category name="%{BKY_CATEGORY_MOTION}" id="motion" colour="#4C97FF" secondaryColour="#3373CC">
+  <category name="%{BKY_CATEGORY_MOTION}" id="motion" ${motionTheme}>
     <block type="motion_attack">
       <value name="DIRECTION">
         <shadow type="math_angle">
@@ -63,17 +72,20 @@ const motion = () => `
     <block type="motion_stop"/>
     ${blockSeparator}
     <block type="motion_speed"/>
+    <block type="motion_xposition"/>
+    <block type="motion_yposition"/>
     <block type="motion_direction"/>
     ${categorySeparator}
   </category>
 `;
 
+// 侦测类需要展示的积木
 const sensing = () => `
-  <category name="%{BKY_CATEGORY_SENSING}" id="sensing" colour="#4CBFE6" secondaryColour="#2E8EB8">
-    <block type="sensing_scanwidth">
-      <value name="WIDTH">
-        <shadow type="math_number">
-          <field name="NUM">5</field>
+  <category name="%{BKY_CATEGORY_SENSING}" id="sensing" ${sensingTheme}>
+    <block type="sensing_scandistance">
+      <value name="DIRECTION">
+        <shadow type="math_angle">
+          <field name="NUM">90</field>
         </shadow>
       </value>
     </block>
@@ -84,10 +96,11 @@ const sensing = () => `
         </shadow>
       </value>
     </block>
-    <block type="sensing_scandistance">
-      <value name="DIRECTION">
-        <shadow type="math_angle">
-          <field name="NUM">90</field>
+    ${blockSeparator}
+    <block type="sensing_scanwidth">
+      <value name="WIDTH">
+        <shadow type="math_number">
+          <field name="NUM">5</field>
         </shadow>
       </value>
     </block>
@@ -100,8 +113,9 @@ const sensing = () => `
   </category>
 `;
 
+// 运算类需要展示的积木
 const operators = () => `
-  <category name="%{BKY_CATEGORY_OPERATORS}" id="operators" colour="#40BF4A" secondaryColour="#389438">
+  <category name="%{BKY_CATEGORY_OPERATORS}" id="operators" ${operatorsTheme}>
     <block type="operator_add">
       <value name="NUM1">
         <shadow type="math_number">
@@ -236,19 +250,19 @@ const operators = () => `
   </category>
 `;
 
-export default function () {
-  return makeToolboxXML([
+export function makeToolboxXML() {
+  return [
     {
-      id: 'motion',
+      id: 'motion', // 替换运动积木分类
       xml: motion(),
     },
     {
-      id: 'sensing',
+      id: 'sensing', // 替换侦测积木分类
       xml: sensing(),
     },
     {
-      id: 'operators',
+      id: 'operators', // 替换运算积木分类
       xml: operators(),
     },
-  ]);
+  ];
 }

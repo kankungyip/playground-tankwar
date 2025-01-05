@@ -1,28 +1,21 @@
-import { classNames } from '@blockcode/ui';
-import { TankwarPlayer } from '../tankwar-player/tankwar-player';
-import Toolbar from './toolbar';
+import { classNames } from '@blockcode/utils';
+import { useAppContext } from '@blockcode/core';
+import { TankEmulator } from '../emulator/emulator';
+import { Toolbar } from './toolbar';
 import styles from './stage.module.css';
 
-export default function Stage({ playing, enemies, enemiesAI, onChangePlaying, onChangeHealth }) {
-  const handlePlay = () => onChangePlaying(true);
-  const handleStop = () => onChangePlaying(false);
-
+export function Stage() {
+  const { appState } = useAppContext();
   return (
     <div className={styles.stageWrapper}>
-      <Toolbar
-        playing={playing}
-        onPlay={handlePlay}
-        onStop={handleStop}
-      />
+      <Toolbar />
 
-      <div className={classNames(styles.stage)}>
-        <TankwarPlayer
-          playing={playing}
-          enemies={enemies}
-          enemiesAI={enemiesAI}
-          onRequestStop={handleStop}
-          onChangeHealth={onChangeHealth}
-        />
+      <div
+        className={classNames(styles.stage, {
+          [styles.small]: appState.value?.stageSize !== 'large',
+        })}
+      >
+        <TankEmulator />
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
-tankwar.player.greenFlag: 运行
-tankwar.player.stopAll: 停止
+tankwar.player.greenFlag: 开战
+tankwar.player.stopAll: 停战
+
+tankwar.stage.small: 缩小舞台
+tankwar.stage.large: 放大舞台
 
 tankwar.stageInfo.player: 玩家
 tankwar.stageInfo.nickname: 昵称
@@ -15,7 +18,7 @@ tankwar.stageInfo.ai.simple: 简单
 tankwar.stageInfo.ai.medium: 中等
 tankwar.stageInfo.ai.senior: 高级
 
-tankwar.blocks.motion_attack: 朝向 %1 方向距离 %2 步发射炮弹
+tankwar.blocks.motion_attack: 面向 %1 方向距离 %2 步发射炮弹
 tankwar.blocks.motion_move: 以 %2 % 速度面向 %1 方向前进
 tankwar.blocks.motion_setspeed: 将速度设为 %1 %
 tankwar.blocks.motion_stop: 停止前进
