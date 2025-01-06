@@ -53,7 +53,6 @@ ScratchBlocks.Blocks['sensing_health'] = {
     this.jsonInit({
       message0: ScratchBlocks.Msg.SENSING_HEALTH,
       category: ScratchBlocks.Categories.sensing,
-      checkboxInFlyout: true,
       extensions: ['colours_sensing', 'output_number'],
     });
   },
