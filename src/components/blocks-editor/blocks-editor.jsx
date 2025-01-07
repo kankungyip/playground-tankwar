@@ -1,5 +1,5 @@
 import { translate } from '@blockcode/core';
-import { BlocksEditor } from '@blockcode/blocks';
+import { ScratchBlocks, BlocksEditor } from '@blockcode/blocks';
 import { TankemuGenerator } from '../../generators/tankemu';
 import { makeToolboxXML } from '../../lib/make-toolbox-xml';
 
@@ -16,6 +16,26 @@ export function TankBlocksEditor() {
     SENSING_SCAN: translate('tankwar.blocks.sensing_scan', 'scan for enemy in direction %1?'),
     SENSING_DISTANCE: translate('tankwar.blocks.sensing_distance', 'measure distance of enemy in direction %1'),
     SENSING_HEALTH: translate('tankwar.blocks.sensing_health', 'health'),
+  };
+
+  // TODO: 修改小绿旗
+  ScratchBlocks.Blocks['event_whenflagclicked'] = {
+    init() {
+      this.jsonInit({
+        message0: ScratchBlocks.Msg.EVENT_WHENFLAGCLICKED,
+        args0: [
+          {
+            type: 'field_image',
+            src: ScratchBlocks.mainWorkspace.options.pathToMedia + 'green-flag.svg',
+            width: 24,
+            height: 24,
+            alt: 'flag',
+          },
+        ],
+        category: ScratchBlocks.Categories.event,
+        extensions: ['colours_event', 'shape_hat'],
+      });
+    },
   };
 
   return (

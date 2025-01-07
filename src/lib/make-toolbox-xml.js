@@ -8,7 +8,6 @@ import {
 } from '@blockcode/blocks';
 
 // 加载自定义/修改的积木块
-import '../blocks/events';
 import '../blocks/motion';
 import '../blocks/sensing';
 
