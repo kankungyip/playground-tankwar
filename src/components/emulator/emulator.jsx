@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'preact/hooks';
-import { batch, useSignal } from '@preact/signals';
-import { MathUtils } from '@blockcode/utils';
-import { useAppContext, useProjectContext, setAppState, setFile, isModifyType, ModifyType } from '@blockcode/core';
+import { useSignal } from '@preact/signals';
+import { useAppContext, useProjectContext, setAppState } from '@blockcode/core';
 import { Konva, Emulator } from '@blockcode/blocks';
 import { TankRuntime } from '../../lib/runtime/runtime';
 import { createTank } from '../../lib/runtime/create-tank';
