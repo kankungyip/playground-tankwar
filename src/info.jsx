@@ -23,8 +23,8 @@ addLocalesMessages({
 
 export default {
   version,
-  sortIndex: 10001, // 1xxxx 个人作品组
-  image: featureImage, // 主题图片
+  sortIndex: 10001, // 1xxxx 社区组
+  image: featureImage,
   name: (
     <Text
       id="tankwar.name"
