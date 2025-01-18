@@ -36,7 +36,6 @@ export class TankUtils extends EventEmitter {
     this._boomImage.src = boomImage;
     this._maxX = runtime.backdropLayer.canvas.width / 2;
     this._maxY = runtime.backdropLayer.canvas.height / 2;
-
   }
 
   get runtime() {
@@ -108,39 +107,37 @@ export class TankUtils extends EventEmitter {
     // TODO: 碰到边缘停止
     let newX = tankUnit.x() + dx;
     let newY = tankUnit.y() + dy;
-    if(newX > this._maxX || newX < -this._maxX){
-        newX = -1 * Math.sign(newX) * this._maxX;
+    if (newX > this._maxX || newX < -this._maxX) {
+      newX = -1 * Math.sign(newX) * this._maxX;
     }
-    if(newY > this._maxY || newY < -this._maxY){
-        newY = -1 * Math.sign(newY) * this._maxY;
+    if (newY > this._maxY || newY < -this._maxY) {
+      newY = -1 * Math.sign(newY) * this._maxY;
     }
 
     // TODO: 碰到坦克停止
 
-       this.spritesLayer.children.forEach((group) => {
-           if(!group.visible() || group === tankUnit){
-                return;
-            }
-            const a = {
-               centerX: group.x(),
-               centerY: group.y(),
-               width : group.getAttr("tank").getAttr("offsetX"),
-               height: group.getAttr("tank").getAttr("offsetY"),
-                angle:  group.getAttr("tank").getAttr("rotation")
-            }
-            const b = {
-                centerX: tankUnit.x(),
-               centerY: tankUnit.y(),
-                width : tankUnit.getAttr("tank").getAttr("offsetX"),
-                height: tankUnit.getAttr("tank").getAttr("offsetY"),
-                angle:  tankUnit.getAttr("tank").getAttr("rotation")
-            }
-            if(this._detectCollision(a, b)){
-
-                tankUnit.setAttr('speed', 0);
-              }
-          })
-
+    this.spritesLayer.children.forEach((group) => {
+      if (!group.visible() || group === tankUnit) {
+        return;
+      }
+      const a = {
+        centerX: group.x(),
+        centerY: group.y(),
+        width: group.getAttr('tank').getAttr('offsetX'),
+        height: group.getAttr('tank').getAttr('offsetY'),
+        angle: group.getAttr('tank').getAttr('rotation'),
+      };
+      const b = {
+        centerX: tankUnit.x(),
+        centerY: tankUnit.y(),
+        width: tankUnit.getAttr('tank').getAttr('offsetX'),
+        height: tankUnit.getAttr('tank').getAttr('offsetY'),
+        angle: tankUnit.getAttr('tank').getAttr('rotation'),
+      };
+      if (this._detectCollision(a, b)) {
+        tankUnit.setAttr('speed', 0);
+      }
+    });
 
     tankUnit.setAttrs({
       x: newX,
@@ -149,100 +146,97 @@ export class TankUtils extends EventEmitter {
     });
   }
 
-
-    _haveIntersection(r1, r2) {
-        return !(
-            r2.centerX > r1.centerX + r1.width ||
-            r2.centerX + r2.width < r1.centerX ||
-            r2.centerY > r1.centerY + r1.height ||
-            r2.centerY + r2.height < r1.centerY
-          );
-    }
-
-  _detectCollision(rect1, rect2) {
-        /**
-          * 碰撞检测函数，检测两个旋转矩形是否碰撞
-          *
-          * rect1, rect2 格式:
-          * {
-          *   centerX: 矩形中心点X坐标,
-          *   centerY: 矩形中心点Y坐标,
-          *   width: 矩形宽度,
-          *   height: 矩形高度,
-          *   angle: 矩形旋转角度（以弧度为单位）
-          * }
-          */
-
-            // 获取矩形的顶点
-          function getVertices(centerX, centerY, width, height, angle) {
-              const hw = width / 2;
-              const hh = height / 2;
-
-                // 矩形顶点相对于中心点的坐标
-                  const vertices = [
-                  { x: -hw, y: -hh },
-                  { x: hw, y: -hh },
-                  { x: hw, y: hh },
-                  { x: -hw, y: hh },
-                ];
-
-                // 旋转并平移顶点
-                  return vertices.map(vertex => {
-                  const rotatedX = vertex.x * Math.cos(angle) - vertex.y * Math.sin(angle);
-                  const rotatedY = vertex.x * Math.sin(angle) + vertex.y * Math.cos(angle);
-                  return {
-                      x: rotatedX + centerX,
-                      y: rotatedY + centerY,
-                    };
-                });
-            }
-
-        // 获取向量
-          function getVector(p1, p2) {
-              return { x: p2.x - p1.x, y: p2.y - p1.y };
-            }
-
-        // 获取向量的法向量
-          function getPerpendicular(vector) {
-              return { x: -vector.y, y: vector.x };
-            }
-
-        // 计算顶点在轴上的投影
-          function project(vertices, axis) {
-              const dots = vertices.map(v => v.x * axis.x + v.y * axis.y);
-              return { min: Math.min(...dots), max: Math.max(...dots) };
-            }
-
-        // 判断两个投影是否重叠
-          function isOverlapping(proj1, proj2) {
-              return !(proj1.max < proj2.min || proj2.max < proj1.min);
-            }
-
-        // 获取两个矩形的顶点
-        const vertices1 = getVertices(rect1.centerX, rect1.centerY, rect1.width, rect1.height, rect1.angle);
-        const vertices2 = getVertices(rect2.centerX, rect2.centerY, rect2.width, rect2.height, rect2.angle);
-
-          // 获取两个矩形的边向量
-        const edges = [
-        ...vertices1.map((v, i) => getVector(v, vertices1[(i + 1) % vertices1.length])),
-        ...vertices2.map((v, i) => getVector(v, vertices2[(i + 1) % vertices2.length])),
-        ];
-
-          // 遍历所有分离轴
-        for (const edge of edges) {
-              const axis = getPerpendicular(edge); // 分离轴
-              const proj1 = project(vertices1, axis);
-              const proj2 = project(vertices2, axis);
-
-                if (!isOverlapping(proj1, proj2)) {
-                  return false; // 找到分离轴，矩形无碰撞
-                }
-        }
-
-        return true; // 所有分离轴的投影重叠，矩形发生碰撞
+  _haveIntersection(r1, r2) {
+    return !(
+      r2.centerX > r1.centerX + r1.width ||
+      r2.centerX + r2.width < r1.centerX ||
+      r2.centerY > r1.centerY + r1.height ||
+      r2.centerY + r2.height < r1.centerY
+    );
   }
 
+  _detectCollision(rect1, rect2) {
+    /**
+     * 碰撞检测函数，检测两个旋转矩形是否碰撞
+     *
+     * rect1, rect2 格式:
+     * {
+     *   centerX: 矩形中心点X坐标,
+     *   centerY: 矩形中心点Y坐标,
+     *   width: 矩形宽度,
+     *   height: 矩形高度,
+     *   angle: 矩形旋转角度（以弧度为单位）
+     * }
+     */
 
+    // 获取矩形的顶点
+    function getVertices(centerX, centerY, width, height, angle) {
+      const hw = width / 2;
+      const hh = height / 2;
+
+      // 矩形顶点相对于中心点的坐标
+      const vertices = [
+        { x: -hw, y: -hh },
+        { x: hw, y: -hh },
+        { x: hw, y: hh },
+        { x: -hw, y: hh },
+      ];
+
+      // 旋转并平移顶点
+      return vertices.map((vertex) => {
+        const rotatedX = vertex.x * Math.cos(angle) - vertex.y * Math.sin(angle);
+        const rotatedY = vertex.x * Math.sin(angle) + vertex.y * Math.cos(angle);
+        return {
+          x: rotatedX + centerX,
+          y: rotatedY + centerY,
+        };
+      });
+    }
+
+    // 获取向量
+    function getVector(p1, p2) {
+      return { x: p2.x - p1.x, y: p2.y - p1.y };
+    }
+
+    // 获取向量的法向量
+    function getPerpendicular(vector) {
+      return { x: -vector.y, y: vector.x };
+    }
+
+    // 计算顶点在轴上的投影
+    function project(vertices, axis) {
+      const dots = vertices.map((v) => v.x * axis.x + v.y * axis.y);
+      return { min: Math.min(...dots), max: Math.max(...dots) };
+    }
+
+    // 判断两个投影是否重叠
+    function isOverlapping(proj1, proj2) {
+      return !(proj1.max < proj2.min || proj2.max < proj1.min);
+    }
+
+    // 获取两个矩形的顶点
+    const vertices1 = getVertices(rect1.centerX, rect1.centerY, rect1.width, rect1.height, rect1.angle);
+    const vertices2 = getVertices(rect2.centerX, rect2.centerY, rect2.width, rect2.height, rect2.angle);
+
+    // 获取两个矩形的边向量
+    const edges = [
+      ...vertices1.map((v, i) => getVector(v, vertices1[(i + 1) % vertices1.length])),
+      ...vertices2.map((v, i) => getVector(v, vertices2[(i + 1) % vertices2.length])),
+    ];
+
+    // 遍历所有分离轴
+    for (const edge of edges) {
+      const axis = getPerpendicular(edge); // 分离轴
+      const proj1 = project(vertices1, axis);
+      const proj2 = project(vertices2, axis);
+
+      if (!isOverlapping(proj1, proj2)) {
+        return false; // 找到分离轴，矩形无碰撞
+      }
+    }
+
+    return true; // 所有分离轴的投影重叠，矩形发生碰撞
+  }
 
   // 面向方向速度
   move(tankUnit, signal, direction, speed) {
@@ -266,7 +260,7 @@ export class TankUtils extends EventEmitter {
       rotation = target.rotation() + rotationValue;
     }
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       // 中止动画
       const handleAbort = () => {
         if (target.getAttr('tween')) {
@@ -277,7 +271,7 @@ export class TankUtils extends EventEmitter {
         }
 
         signal.off('abort', handleAbort);
-        resolve();
+        reject();
       };
       signal.once('abort', handleAbort);
 
@@ -434,7 +428,7 @@ export class TankUtils extends EventEmitter {
     const tank = tankUnit.getAttr('tank');
     const turret = tankUnit.getAttr('turret');
 
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       // 中止开火
       const handleAbort = () => {
         handleAbort.stopped = true;
@@ -449,7 +443,7 @@ export class TankUtils extends EventEmitter {
         }
 
         signal.off('abort', handleAbort);
-        resolve();
+        reject();
       };
       signal.once('abort', handleAbort);
 
