@@ -20,13 +20,11 @@ export function Toolbar() {
   }, []);
 
   const handleStop = useCallback(() => {
-    setAppState({
-      running: false,
-    });
+    setAppState('running', false);
   }, []);
 
   const handleChangeStageSize = useCallback((stageSize) => {
-    setAppState({ stageSize });
+    setAppState('stageSize', stageSize);
   }, []);
 
   return (

@@ -72,8 +72,6 @@ export class TankUtils extends EventEmitter {
 
   // 启动坦克
   drive(tankUnit, signal) {
-    tankUnit.setAttr('currentSpeed', 0);
-
     if (!this.running) return;
     if (!tankUnit.visible()) return;
 
@@ -139,10 +137,9 @@ export class TankUtils extends EventEmitter {
       }
     });
 
-    tankUnit.setAttrs({
+    tankUnit.position({
       x: newX,
       y: newY,
-      currentSpeed: speedValue * this._speedRatio,
     });
   }
 
@@ -263,8 +260,8 @@ export class TankUtils extends EventEmitter {
     return new Promise((resolve, reject) => {
       // 中止动画
       const handleAbort = () => {
-        if (target.getAttr('tween')) {
-          const tween = target.getAttr('tween');
+        const tween = target.getAttr('tween');
+        if (tween) {
           target.setAttr('tween', null);
           tween.reset();
           tween.destroy();
@@ -282,8 +279,10 @@ export class TankUtils extends EventEmitter {
         easing: Konva.Easings.Linear,
         onFinish: () => {
           const tween = target.getAttr('tween');
-          target.setAttr('tween', null);
-          tween.destroy();
+          if (tween) {
+            target.setAttr('tween', null);
+            tween.destroy();
+          }
 
           signal.off('abort', handleAbort);
           resolve();

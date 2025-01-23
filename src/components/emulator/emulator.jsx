@@ -17,18 +17,38 @@ const resetTank = (tankUnit, x, y, rotation) => {
     scanWidth: 4,
     cooldown: null,
   });
-  tankUnit.getAttr('tank')?.setAttrs?.({
-    rotation,
-    visible: true,
-    tween: null,
-  });
-  tankUnit.getAttr('turret')?.setAttrs?.({
-    rotation,
-    visible: true,
-    tween: null,
-  });
+
   tankUnit.getAttr('broken')?.setAttr?.('visible', false);
   tankUnit.getAttr('radar')?.setAttr?.('visible', false);
+
+  const tank = tankUnit.getAttr('tank');
+  const turret = tankUnit.getAttr('turret');
+
+  const tankTween = tank?.getAttr?.('tween');
+  if (tankTween) {
+    tankTween.reset();
+    tankTween.destroy();
+  }
+
+  const turretTween = turret?.getAttr?.('tween');
+  if (turretTween) {
+    turretTween.reset();
+    turretTween.destroy();
+  }
+
+  setTimeout(() => {
+    tank?.setAttrs?.({
+      rotation,
+      visible: true,
+      tween: null,
+    });
+    turret?.setAttrs?.({
+      rotation,
+      visible: true,
+      tween: null,
+    });
+  });
+
   return tankUnit;
 };
 
@@ -60,8 +80,6 @@ export function TankEmulator() {
     if (appState.value?.running === true) {
       let code = '';
       code += 'const tankUtils = runtime.tankUtils;\n';
-      // 坦克根据设定的速度每帧前进
-      code += `runtime.on('frame', () => runtime.drives(runtime.createAbortController().signal));\n`;
       // 玩家坦克
       code += `((target /*${file.value.name}*/) => {\n${file.value.script}})(runtime.tanks.player);\n\n`;
       // AI 坦克
@@ -116,6 +134,10 @@ export function TankEmulator() {
     runtime.value.spritesLayer.add(createTank(scaleX, scaleY, 'red'));
     runtime.value.spritesLayer.add(createTank(scaleX, scaleY, 'yellow'));
     runtime.value.spritesLayer.add(createTank(scaleX, scaleY, 'green'));
+
+    // 坦克根据设定的速度每帧前进
+    const abortController = runtime.value.createAbortController();
+    runtime.value.on('frame', () => runtime.value.drives(abortController.signal));
 
     return () => {
       runtime.value = null;

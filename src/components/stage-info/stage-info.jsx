@@ -24,16 +24,15 @@ export function StageInfo() {
   }, []);
 
   const handleChangeEnemies = useCallback((enemies) => {
-    setAppState({
-      enemies,
-    });
+    setAppState('enemies', enemies);
   }, []);
 
   const wrapChangeEnemyAI = useCallback(
     (id) => (ai) => {
-      setAppState({
-        tanks: appState.value.tanks.map((tank) => (id === tank.id ? { ...tank, ai } : tank)),
-      });
+      setAppState(
+        'tanks',
+        appState.value.tanks.map((tank) => (id === tank.id ? { ...tank, ai } : tank)),
+      );
     },
     [],
   );
