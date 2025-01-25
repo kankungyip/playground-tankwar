@@ -23,6 +23,7 @@ addLocalesMessages({
 
 export default {
   version,
+  beta: true,
   sortIndex: 10001, // 1xxxx 社区组
   image: featureImage,
   name: (
