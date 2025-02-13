@@ -1,4 +1,4 @@
-import { Konva } from '@blockcode/blocks';
+import { Konva } from '@blockcode/utils';
 
 import tankBlueImage from './media/tank-blue.png';
 import turretBlueImage from './media/turret-blue.png';

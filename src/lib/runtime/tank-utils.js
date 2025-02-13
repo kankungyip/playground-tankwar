@@ -1,6 +1,5 @@
 import { EventEmitter } from 'node:events';
-import { sleep, MathUtils } from '@blockcode/utils';
-import { Konva } from '@blockcode/blocks';
+import { sleep, MathUtils, Konva } from '@blockcode/utils';
 
 import bulletImage from './media/bullet.png';
 import boomImage from './media/boom.png';
