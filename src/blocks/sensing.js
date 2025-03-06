@@ -1,59 +1,100 @@
+import { translate, themeColors } from '@blockcode/core';
 import { ScratchBlocks } from '@blockcode/blocks';
 
-ScratchBlocks.Blocks['sensing_scanwidth'] = {
-  init() {
-    this.jsonInit({
-      message0: ScratchBlocks.Msg.SENSING_SCANWIDTH,
-      args0: [
-        {
-          type: 'input_value',
-          name: 'WIDTH',
+export default () => ({
+  id: 'sensing',
+  name: '%{BKY_CATEGORY_SENSING}',
+  themeColor: themeColors.blocks.sensing.primary,
+  inputColor: themeColors.blocks.sensing.secondary,
+  otherColor: themeColors.blocks.sensing.tertiary,
+  blocks: [
+    {
+      // 扫描距离
+      id: 'scandistance',
+      text: translate('tankwar.blocks.sensing_distance', 'measure distance of enemy in direction %1'),
+      output: 'number',
+      inputs: {
+        DIRECTION: {
+          type: 'angle',
+          defaultValue: 90,
         },
-      ],
-      category: ScratchBlocks.Categories.sensing,
-      extensions: ['colours_sensing', 'shape_statement'],
-    });
-  },
-};
-
-ScratchBlocks.Blocks['sensing_scan'] = {
-  init() {
-    this.jsonInit({
-      message0: ScratchBlocks.Msg.SENSING_SCAN,
-      args0: [
-        {
-          type: 'input_value',
-          name: 'DIRECTION',
+      },
+      emu(block) {
+        const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || 90;
+        const code = `(await tankUtils.scan(target, ${directionValue}))`;
+        return [code, this.ORDER_FUNCTION_CALL];
+      },
+    },
+    {
+      // 扫描敌人
+      id: 'scan',
+      text: translate('tankwar.blocks.sensing_scan', 'scan for enemy in direction %1?'),
+      output: 'boolean',
+      inputs: {
+        DIRECTION: {
+          type: 'angle',
+          defaultValue: 90,
         },
-      ],
-      category: ScratchBlocks.Categories.sensing,
-      extensions: ['colours_sensing', 'output_boolean'],
-    });
-  },
-};
-
-ScratchBlocks.Blocks['sensing_scandistance'] = {
-  init() {
-    this.jsonInit({
-      message0: ScratchBlocks.Msg.SENSING_DISTANCE,
-      args0: [
-        {
-          type: 'input_value',
-          name: 'DIRECTION',
+      },
+      emu(block) {
+        const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || 90;
+        const code = `(await tankUtils.scan(target, ${directionValue}) !== Infinity)`;
+        return [code, this.ORDER_EQUALITY];
+      },
+    },
+    '---',
+    {
+      // 设置扫描宽度
+      id: 'scanwidth',
+      text: translate('tankwar.blocks.sensing_scanwidth', 'set scan width to %1'),
+      inputs: {
+        WIDTH: {
+          type: 'number',
+          defaultValue: 5,
         },
-      ],
-      category: ScratchBlocks.Categories.sensing,
-      extensions: ['colours_sensing', 'output_number'],
-    });
-  },
-};
-
-ScratchBlocks.Blocks['sensing_health'] = {
-  init() {
-    this.jsonInit({
-      message0: ScratchBlocks.Msg.SENSING_HEALTH,
-      category: ScratchBlocks.Categories.sensing,
-      extensions: ['colours_sensing', 'output_number'],
-    });
-  },
-};
+      },
+      emu(block) {
+        let code = '';
+        if (this.STATEMENT_PREFIX) {
+          code += this.injectId(this.STATEMENT_PREFIX, block);
+        }
+        const widthValue = this.valueToCode(block, 'WIDTH', this.ORDER_NONE) || 5;
+        code += `target.setAttr('scanWidth', ${widthValue});\n`;
+        return code;
+      },
+    },
+    '---',
+    {
+      // 血量
+      id: 'health',
+      text: translate('tankwar.blocks.sensing_health', 'health'),
+      output: 'number',
+      emu(block) {
+        return [`target.getAttr('health')`, this.ORDER_FUNCTION_CALL];
+      },
+    },
+    '---',
+    {
+      // 计时器
+      id: 'timer',
+      text: ScratchBlocks.Msg.SENSING_TIMER,
+      output: 'number',
+      emu(block) {
+        return ['runtime.times', this.ORDER_MEMBER];
+      },
+    },
+    {
+      // 重置计时器
+      id: 'resettimer',
+      text: ScratchBlocks.Msg.SENSING_RESETTIMER,
+      emu(block) {
+        let code = '';
+        if (this.STATEMENT_PREFIX) {
+          code += this.injectId(this.STATEMENT_PREFIX, block);
+        }
+        code += 'runtime.resetTimes()\n';
+        return code;
+      },
+    },
+  ],
+});

@@ -1,7 +1,7 @@
-import { useLocalesContext, useAppContext, useProjectContext, translate, setAppState } from '@blockcode/core';
+import { useAppContext, useProjectContext, translate, setAppState } from '@blockcode/core';
 import { classNames } from '@blockcode/utils';
 
-import { Text, Button, Label, BufferedInput, ToggleButtons } from '@blockcode/core';
+import { Label, BufferedInput, ToggleButtons } from '@blockcode/core';
 import styles from './stage-info.module.css';
 
 // import tankBlueIcon from './icons/icon-tank-blue.png';
@@ -13,8 +13,6 @@ import { useCallback, useMemo } from 'preact/hooks';
 const enemiesIcons = [tankRedIcon, tankYellowIcon, tankGreenIcon];
 
 export function StageInfo() {
-  const { translator } = useLocalesContext();
-
   const { appState } = useAppContext();
 
   const { file, setFile } = useProjectContext();
@@ -85,10 +83,10 @@ export function StageInfo() {
             <ToggleButtons
               disabled={appState.value?.running}
               items={[
-                { value: 'local', title: translate('tankwar.stageInfo.mode.local', 'Local AI', translator) },
+                { value: 'local', title: translate('tankwar.stageInfo.mode.local', 'Local AI') },
                 {
                   value: 'remote',
-                  title: translate('tankwar.stageInfo.mode.remote', 'Remote Players', translator),
+                  title: translate('tankwar.stageInfo.mode.remote', 'Remote Players'),
                   disabled: true,
                 },
               ]}
@@ -126,9 +124,9 @@ export function StageInfo() {
             <ToggleButtons
               disabled={appState.value?.running}
               items={[
-                { value: 'simple', title: translate('tankwar.stageInfo.ai.simple', 'Simple', translator) },
-                { value: 'medium', title: translate('tankwar.stageInfo.ai.medium', 'Medium', translator) },
-                { value: 'senior', title: translate('tankwar.stageInfo.ai.senior', 'Senior', translator) },
+                { value: 'simple', title: translate('tankwar.stageInfo.ai.simple', 'Simple') },
+                { value: 'medium', title: translate('tankwar.stageInfo.ai.medium', 'Medium') },
+                { value: 'senior', title: translate('tankwar.stageInfo.ai.senior', 'Senior') },
               ]}
               value={tank.ai ?? 'simple'}
               onChange={wrapChangeEnemyAI(tank.id)}

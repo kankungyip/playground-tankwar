@@ -27,3 +27,4 @@ tankwar.blocks.sensing_scanwidth: set scan width to %1
 tankwar.blocks.sensing_scan: scan for enemy in direction %1?
 tankwar.blocks.sensing_distance: measure distance of enemy in direction %1
 tankwar.blocks.sensing_health: health
+tankwar.blocks.event_damage: damage

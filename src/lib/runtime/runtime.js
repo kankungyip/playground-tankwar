@@ -32,6 +32,27 @@ export class TankRuntime extends Runtime {
     return this._onWatchHealth;
   }
 
+  _updateThresholds() {
+    const keys = this._thresholds.keys();
+    for (const key of keys) {
+      const [name, value] = key.split('>');
+      let isGreater;
+      if (name === 'TIMER') {
+        isGreater = this.times > parseFloat(value);
+      }
+      if (name === 'DAMAGE') {
+        const health = this.tanks.player.getAttr('health');
+        isGreater = 100 - health > parseFloat(value);
+      }
+      if (typeof isGreater === 'boolean') {
+        if (isGreater && !this._thresholds.get(key)) {
+          this.run(`threshold:${key}`);
+        }
+        this._thresholds.set(key, isGreater);
+      }
+    }
+  }
+
   stop() {
     // 清空所有跑弹和烟雾
     this.boardLayer.destroyChildren();

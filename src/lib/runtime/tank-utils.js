@@ -331,6 +331,12 @@ export class TankUtils extends EventEmitter {
     tankUnit.setAttr('speed', speedValue);
   }
 
+  // 速度
+  getSpeed(tankUnit) {
+    const speedValue = tankUnit.getAttr('speed');
+    return Math.round(speedValue * this._speedRatio);
+  }
+
   // 停止
   stop(tankUnit) {
     this.setSpeed(tankUnit, 0);

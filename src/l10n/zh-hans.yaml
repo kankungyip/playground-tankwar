@@ -7,7 +7,7 @@ tankwar.stage.large: 放大舞台
 tankwar.stageInfo.player: 玩家
 tankwar.stageInfo.nickname: 昵称
 tankwar.stageInfo.enemies: 敌方数量
-tankwar.stageInfo.health: 生命值
+tankwar.stageInfo.health: 血量
 tankwar.stageInfo.enemy.red: 红
 tankwar.stageInfo.enemy.yellow: 黄
 tankwar.stageInfo.enemy.green: 绿
@@ -26,4 +26,5 @@ tankwar.blocks.motion_speed: 速度
 tankwar.blocks.sensing_scanwidth: 将雷达扫描宽度设为 %1
 tankwar.blocks.sensing_scan: 雷达扫描 %1 方向有敌人？
 tankwar.blocks.sensing_distance: 雷达测量 %1 方向敌人的距离
-tankwar.blocks.sensing_health: 生命值
+tankwar.blocks.sensing_health: 血量
+tankwar.blocks.event_damage: 伤害
