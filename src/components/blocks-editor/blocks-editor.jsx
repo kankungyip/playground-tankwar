@@ -1,11 +1,12 @@
 import { BlocksEditor } from '@blockcode/blocks';
-import { buildBlocks, TankEmulatorGenerator } from '../../blocks/blocks';
+import { buildBlocks, TankwarGenerator } from '../../blocks/blocks';
 
-const emulator = new TankEmulatorGenerator();
+const emulator = new TankwarGenerator();
 
 export function TankBlocksEditor() {
   return (
     <BlocksEditor
+      enableMonitor
       disableExtensionButton
       emulator={emulator}
       onBuildinExtensions={buildBlocks}

@@ -2,7 +2,7 @@ import getMotionBlocks from './motion';
 import getEventBlocks from './events';
 import getSensingBlocks from './sensing';
 
-export { TankEmulatorGenerator } from './generator';
+export { TankwarGenerator } from './generator';
 
 export function buildBlocks() {
   const motionBlocks = getMotionBlocks();
