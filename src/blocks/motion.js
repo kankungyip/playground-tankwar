@@ -63,7 +63,7 @@ export default () => ({
     {
       // 右转
       id: 'turnright',
-      text: ScratchBlocks.Msg.MOTION_TRUNRIGHT,
+      text: ScratchBlocks.Msg.MOTION_TURNRIGHT,
       inputs: {
         IMAGE: {
           type: 'image',
@@ -87,7 +87,7 @@ export default () => ({
     {
       // 右转
       id: 'turnleft',
-      text: ScratchBlocks.Msg.MOTION_TRUNLEFT,
+      text: ScratchBlocks.Msg.MOTION_TURNLEFT,
       inputs: {
         IMAGE: {
           type: 'image',
@@ -184,7 +184,7 @@ export default () => ({
     {
       // y
       id: 'yposition',
-      text: ScratchBlocks.Msg.MOTION_XPOSITION,
+      text: ScratchBlocks.Msg.MOTION_YPOSITION,
       output: 'number',
       emu(block) {
         return ['target.y()', this.ORDER_FUNCTION_CALL];

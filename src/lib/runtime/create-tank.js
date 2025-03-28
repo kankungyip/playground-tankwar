@@ -1,4 +1,4 @@
-import { Konva } from '@blockcode/utils';
+import { Konva, KonvaUtils } from '@blockcode/utils';
 
 import tankBlueImage from './media/tank-blue.png';
 import turretBlueImage from './media/turret-blue.png';
@@ -58,6 +58,20 @@ export function createTank(scaleX, scaleY, id, visible = false) {
       image,
       offsetX: image.width / 2,
       offsetY: image.height / 2,
+    });
+
+    // 计算凸包
+    KonvaUtils.computeConvexHulls(tankUnit, image);
+
+    // 自定义更新凸包位置用到的属性
+    tankUnit.onUpdateConvexHulls = () => ({
+      x: tankUnit.x(),
+      y: tankUnit.y(),
+      offsetX: tank.offsetX(),
+      offsetY: tank.offsetY(),
+      scaleX: tank.scaleX(),
+      scaleY: tank.scaleY(),
+      rotation: tank.rotation(),
     });
   });
   tankUnit.add(tank);
