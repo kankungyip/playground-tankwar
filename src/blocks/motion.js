@@ -19,8 +19,8 @@ export default () => ({
           defaultValue: 90,
         },
         DISTANCE: {
-          type: 'number',
-          defaultValue: 50,
+          shadow: 'distancevalue',
+          defaultValue: 100,
         },
       },
       emu(block) {
@@ -44,7 +44,7 @@ export default () => ({
           defaultValue: 90,
         },
         SPEED: {
-          type: 'number',
+          shadow: 'speedvalue',
           defaultValue: 100,
         },
       },
@@ -54,8 +54,8 @@ export default () => ({
           code += this.injectId(this.STATEMENT_PREFIX, block);
         }
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || '0';
-        const speedValue = this.valueToCode(block, 'SPEED', this.ORDER_NONE) || '100';
-        code += `await tankUtils.move(target, signal, ${directionValue}, ${speedValue});\n`;
+        const speedvalue = this.valueToCode(block, 'SPEED', this.ORDER_NONE) || '100';
+        code += `await tankUtils.move(target, signal, ${directionValue}, ${speedvalue});\n`;
         return code;
       },
     },
@@ -135,7 +135,7 @@ export default () => ({
       text: translate('tankwar.blocks.motion_setspeed', 'set speed to %1 %'),
       inputs: {
         SPEED: {
-          type: 'number',
+          shadow: 'speedvalue',
           defaultValue: 50,
         },
       },
@@ -197,6 +197,39 @@ export default () => ({
       output: 'number',
       emu(block) {
         return ['tankUtils.getDirection(target)', this.ORDER_FUNCTION_CALL];
+      },
+    },
+    {
+      // 攻击距离
+      id: 'distancevalue',
+      inline: true,
+      output: 'number',
+      inputs: {
+        DISTANCE: {
+          type: 'slider',
+          min: 50,
+          max: 200,
+        },
+      },
+      emu(block) {
+        const distanceCode = block.getFieldValue('DISTANCE') || 0;
+        console.log(distanceCode);
+        return [distanceCode, this.ORDER_NONE];
+      },
+    },
+    {
+      // 速度百分比
+      id: 'speedvalue',
+      inline: true,
+      output: 'number',
+      inputs: {
+        SPEED: {
+          type: 'slider',
+        },
+      },
+      emu(block) {
+        const speedCode = block.getFieldValue('SPEED') || 0;
+        return [speedCode, this.ORDER_NONE];
       },
     },
   ],

@@ -7,8 +7,8 @@ import boomImage from './media/boom.png';
 const SPEED_RATIO = 2;
 const SECOND_PER_DEGREE = 5 / 360;
 const BULLET_COOLDOWN = 1000;
-const MIN_BULLET_DISTANCE = 70;
-const MAX_BULLET_DISTANCE = 300;
+const MIN_BULLET_DISTANCE = 50;
+const MAX_BULLET_DISTANCE = 200;
 const BULLET_SKIP_DISTANCE = 20; // 让炮弹离开车身
 const BULLET_SPEED = 200;
 const MIN_SCAN_WIDTH = 2;
