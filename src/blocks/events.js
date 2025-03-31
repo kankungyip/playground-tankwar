@@ -20,9 +20,6 @@ export default () => ({
           src: './assets/blocks-media/green-flag.svg',
         },
       },
-      emu() {
-        return `runtime.when('start', ${this.HAT_CALLBACK});\n`;
-      },
     },
     '---',
     {
@@ -42,11 +39,6 @@ export default () => ({
           type: 'number',
           defaultValue: 10,
         },
-      },
-      emu(block) {
-        const nameValue = block.getFieldValue('WHENGREATERTHANMENU');
-        const valueCode = this.valueToCode(block, 'VALUE', this.ORDER_NONE) || '10';
-        return `runtime.whenGreaterThen('${nameValue}', ${valueCode}, ${this.HAT_CALLBACK});\n`;
       },
     },
   ],

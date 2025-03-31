@@ -54,12 +54,8 @@ export default () => ({
         },
       },
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
         const widthValue = this.valueToCode(block, 'WIDTH', this.ORDER_NONE) || 5;
-        code += `target.setAttr('scanWidth', ${widthValue});\n`;
+        const code = `target.setAttr('scanWidth', ${widthValue});\n`;
         return code;
       },
     },
@@ -88,11 +84,7 @@ export default () => ({
       id: 'resettimer',
       text: ScratchBlocks.Msg.SENSING_RESETTIMER,
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
-        code += 'runtime.resetTimes()\n';
+        const code = 'runtime.resetTimes()\n';
         return code;
       },
     },

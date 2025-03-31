@@ -24,13 +24,9 @@ export default () => ({
         },
       },
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || '0';
         const distanceValue = this.valueToCode(block, 'DISTANCE', this.ORDER_NONE) || '100';
-        code += `await tankUtils.attack(target, signal, ${directionValue}, ${distanceValue});\n`;
+        const code = `await tankUtils.attack(target, signal, ${directionValue}, ${distanceValue});\n`;
         return code;
       },
     },
@@ -49,13 +45,9 @@ export default () => ({
         },
       },
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || '0';
         const speedvalue = this.valueToCode(block, 'SPEED', this.ORDER_NONE) || '100';
-        code += `await tankUtils.move(target, signal, ${directionValue}, ${speedvalue});\n`;
+        const code = `await tankUtils.move(target, signal, ${directionValue}, ${speedvalue});\n`;
         return code;
       },
     },
@@ -75,12 +67,8 @@ export default () => ({
         },
       },
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
         const degreesCode = this.valueToCode(block, 'DEGREES', this.ORDER_NONE) || 0;
-        code += `await tankUtils.turnRight(target, signal, ${degreesCode});\n`;
+        const code = `await tankUtils.turnRight(target, signal, ${degreesCode});\n`;
         return code;
       },
     },
@@ -99,12 +87,8 @@ export default () => ({
         },
       },
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
         const degreesCode = this.valueToCode(block, 'DEGREES', this.ORDER_NONE) || 0;
-        code += `await tankUtils.turnLeft(target, signal, ${degreesCode});\n`;
+        const code = `await tankUtils.turnLeft(target, signal, ${degreesCode});\n`;
         return code;
       },
     },
@@ -119,12 +103,8 @@ export default () => ({
         },
       },
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
         const directionCode = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || '0';
-        code += `await tankUtils.setDirection(target, signal, ${directionCode});\n`;
+        const code = `await tankUtils.setDirection(target, signal, ${directionCode});\n`;
         return code;
       },
     },
@@ -140,12 +120,8 @@ export default () => ({
         },
       },
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
         const speedCode = this.valueToCode(block, 'SPEED', this.ORDER_NONE) || '0';
-        code += `tankUtils.setSpeed(target, ${speedCode});\n`;
+        const code = `tankUtils.setSpeed(target, ${speedCode});\n`;
         return code;
       },
     },
@@ -154,11 +130,7 @@ export default () => ({
       id: 'stop',
       text: translate('tankwar.blocks.motion_stop', 'stop'),
       emu(block) {
-        let code = '';
-        if (this.STATEMENT_PREFIX) {
-          code += this.injectId(this.STATEMENT_PREFIX, block);
-        }
-        code += `tankUtils.stop(target);\n`;
+        const code = `tankUtils.stop(target);\n`;
         return code;
       },
     },
