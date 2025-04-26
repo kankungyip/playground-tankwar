@@ -121,7 +121,7 @@ export class TankUtils extends EventEmitter {
       this._turn(turret, signal, tank.rotation());
     }
 
-    // TODO: 冒烟的坦克
+    // [TODO] 冒烟的坦克
 
     // 碰到边缘停止
     const nearestEdge = this._findNearestEdge(tank);
@@ -466,7 +466,7 @@ export class TankUtils extends EventEmitter {
     const tankUnit = radar.getAttr('tankUnit');
     if (target === tankUnit) return;
 
-    // TODO: 判断扫描到的是否是敌人
+    // [TODO] 判断扫描到的是否是敌人
 
     // 计算扫描范围
     const angle1 = radar.rotation();

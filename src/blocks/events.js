@@ -10,7 +10,7 @@ export default () => ({
   blocks: [
     {
       // 开始战斗
-      // TODO: 替换小绿旗为战斗图标
+      // [TODO] 替换小绿旗为战斗图标
       id: 'whenflagclicked',
       text: ScratchBlocks.Msg.EVENT_WHENFLAGCLICKED,
       hat: true,
