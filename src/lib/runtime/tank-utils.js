@@ -126,14 +126,14 @@ export class TankUtils extends EventEmitter {
     // 碰到边缘停止
     const nearestEdge = this._findNearestEdge(tank);
     if (nearestEdge) {
-      tankUnit.setAttr('speed', 0);
+      this.setSpeed(tankUnit, 0);
     }
 
     // 碰到坦克停止
     this.spritesLayer.children.some((enemyUnit) => {
       if (enemyUnit === tankUnit || !enemyUnit.visible()) return;
       if (KonvaUtils.checkConvexHullsCollision(tankUnit, enemyUnit)) {
-        tankUnit.setAttr('speed', 0);
+        this.setSpeed(tankUnit, 0);
       }
     });
 
@@ -146,10 +146,11 @@ export class TankUtils extends EventEmitter {
     const dx = -speedValue * Math.cos(radian);
     const dy = -speedValue * Math.sin(radian);
 
-    tankUnit.position({
-      x: tankUnit.x() + dx,
-      y: tankUnit.y() + dy,
-    });
+    const x = tankUnit.x() + dx;
+    const y = tankUnit.y() + dy;
+    tankUnit.position({ x, y });
+    this.runtime.setMonitorValueById(`${tankUnit.id()}.motion_xposition`, Math.round(x));
+    this.runtime.setMonitorValueById(`${tankUnit.id()}.motion_yposition`, Math.round(y));
   }
 
   // 面向方向速度
@@ -174,7 +175,7 @@ export class TankUtils extends EventEmitter {
       rotation = target.rotation() + rotationValue;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // 中止动画
       const handleAbort = () => {
         const tween = target.getAttr('tween');
@@ -185,7 +186,7 @@ export class TankUtils extends EventEmitter {
         }
 
         signal.off('abort', handleAbort);
-        reject();
+        resolve();
       };
       signal.once('abort', handleAbort);
 
@@ -204,6 +205,12 @@ export class TankUtils extends EventEmitter {
           signal.off('abort', handleAbort);
           resolve();
         },
+        onUpdate: () => {
+          const tankUnit = target.getAttr('tankUnit');
+          if (target.hasName('tank')) {
+            this.runtime.setMonitorValueById(`${tankUnit.id()}.motion_direction`, this.getDirection(tankUnit));
+          }
+        },
       });
       target.setAttr('tween', tween);
       tween.play();
@@ -221,7 +228,7 @@ export class TankUtils extends EventEmitter {
 
   // 获得方向
   getDirection(tankUnit) {
-    return MathUtils.wrapClamp(-tankUnit.getAttr('tank').rotation(), -179, 180);
+    return Math.round(MathUtils.wrapClamp(-tankUnit.getAttr('tank').rotation(), -179, 180));
   }
 
   // 右转
@@ -245,8 +252,9 @@ export class TankUtils extends EventEmitter {
     if (!this.running) return;
     if (!tankUnit.visible()) return;
     if (tankUnit.getAttr('health') <= 0) return;
-    const speedValue = MathUtils.toNumber(speed) / this._speedRatio;
-    tankUnit.setAttr('speed', speedValue);
+    const speedValue = MathUtils.toNumber(speed);
+    tankUnit.setAttr('speed', speedValue / this._speedRatio);
+    this.runtime.setMonitorValueById(`${tankUnit.id()}.motion_speed`, Math.round(speedValue));
   }
 
   // 速度
@@ -296,6 +304,7 @@ export class TankUtils extends EventEmitter {
     const boom = new Konva.Sprite({
       x: bullet.x(),
       y: bullet.y(),
+      name: 'boom',
       image: this._boomImage,
       scale: bullet.scale(),
       rotation: bullet.rotation(),
@@ -350,7 +359,7 @@ export class TankUtils extends EventEmitter {
     const tank = tankUnit.getAttr('tank');
     const turret = tankUnit.getAttr('turret');
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       // 中止开火
       const handleAbort = () => {
         handleAbort.stopped = true;
@@ -365,13 +374,14 @@ export class TankUtils extends EventEmitter {
         }
 
         signal.off('abort', handleAbort);
-        reject();
+        resolve();
       };
       signal.once('abort', handleAbort);
 
       // 加载跑弹
       const bullet = new Konva.Image({
         tankUnit,
+        name: 'boom',
         image: this._bulletImage,
         offsetX: this._bulletImage.width / 2,
         offsetY: this._bulletImage.height / 2,

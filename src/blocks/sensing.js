@@ -9,23 +9,6 @@ export default () => ({
   otherColor: themeColors.blocks.sensing.tertiary,
   blocks: [
     {
-      // 扫描距离
-      id: 'scandistance',
-      text: translate('tankwar.blocks.sensing_distance', 'measure distance of enemy in direction %1'),
-      output: 'number',
-      inputs: {
-        DIRECTION: {
-          type: 'angle',
-          defaultValue: 90,
-        },
-      },
-      emu(block) {
-        const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || 90;
-        const code = `(await tankUtils.scan(target, ${directionValue}))`;
-        return [code, this.ORDER_FUNCTION_CALL];
-      },
-    },
-    {
       // 扫描敌人
       id: 'scan',
       text: translate('tankwar.blocks.sensing_scan', 'scan for enemy in direction %1?'),
@@ -40,6 +23,23 @@ export default () => ({
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || 90;
         const code = `(await tankUtils.scan(target, ${directionValue}) !== Infinity)`;
         return [code, this.ORDER_EQUALITY];
+      },
+    },
+    {
+      // 扫描距离
+      id: 'scandistance',
+      text: translate('tankwar.blocks.sensing_distance', 'measure distance of enemy in direction %1'),
+      output: 'number',
+      inputs: {
+        DIRECTION: {
+          type: 'angle',
+          defaultValue: 90,
+        },
+      },
+      emu(block) {
+        const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || 90;
+        const code = `(await tankUtils.scan(target, ${directionValue}))`;
+        return [code, this.ORDER_FUNCTION_CALL];
       },
     },
     '---',
@@ -65,6 +65,7 @@ export default () => ({
       id: 'health',
       text: translate('tankwar.blocks.sensing_health', 'health'),
       output: 'number',
+      monitoring: true,
       emu(block) {
         return [`target.getAttr('health')`, this.ORDER_FUNCTION_CALL];
       },
@@ -75,6 +76,7 @@ export default () => ({
       id: 'timer',
       text: ScratchBlocks.Msg.SENSING_TIMER,
       output: 'number',
+      monitoring: true,
       emu(block) {
         return ['runtime.times', this.ORDER_MEMBER];
       },

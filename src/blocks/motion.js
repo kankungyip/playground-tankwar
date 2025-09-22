@@ -140,6 +140,7 @@ export default () => ({
       id: 'speed',
       text: translate('tankwar.blocks.motion_speed', 'speed'),
       output: 'number',
+      monitoring: true,
       emu(block) {
         return [`tankUtils.getSpeed(target)`, this.ORDER_FUNCTION_CALL];
       },
@@ -149,8 +150,9 @@ export default () => ({
       id: 'xposition',
       text: ScratchBlocks.Msg.MOTION_XPOSITION,
       output: 'number',
+      monitoring: true,
       emu(block) {
-        return ['target.x()', this.ORDER_FUNCTION_CALL];
+        return ['Math.round(target.x())', this.ORDER_FUNCTION_CALL];
       },
     },
     {
@@ -158,8 +160,9 @@ export default () => ({
       id: 'yposition',
       text: ScratchBlocks.Msg.MOTION_YPOSITION,
       output: 'number',
+      monitoring: true,
       emu(block) {
-        return ['target.y()', this.ORDER_FUNCTION_CALL];
+        return ['Math.round(target.y())', this.ORDER_FUNCTION_CALL];
       },
     },
     {
@@ -167,10 +170,12 @@ export default () => ({
       id: 'direction',
       text: ScratchBlocks.Msg.MOTION_DIRECTION,
       output: 'number',
+      monitoring: true,
       emu(block) {
         return ['tankUtils.getDirection(target)', this.ORDER_FUNCTION_CALL];
       },
     },
+    // 内连积木
     {
       // 攻击距离
       id: 'distancevalue',
@@ -185,7 +190,6 @@ export default () => ({
       },
       emu(block) {
         const distanceCode = block.getFieldValue('DISTANCE') || 0;
-        console.log(distanceCode);
         return [distanceCode, this.ORDER_NONE];
       },
     },
@@ -197,6 +201,8 @@ export default () => ({
       inputs: {
         SPEED: {
           type: 'slider',
+          min: -100,
+          max: 100,
         },
       },
       emu(block) {

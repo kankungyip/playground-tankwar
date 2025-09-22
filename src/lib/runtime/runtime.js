@@ -51,11 +51,13 @@ export class TankRuntime extends Runtime {
         this._thresholds.set(key, isGreater);
       }
     }
+    this.setMonitorValueById('sensing_health', this.tanks.player.getAttr('health'));
+    this.setMonitorValueById('sensing_timer', this.times);
   }
 
   stop() {
     // 清空所有跑弹和烟雾
-    this.boardLayer.destroyChildren();
+    this.querySelectorAll('.boom').forEach((dialog) => dialog.destroy());
     super.stop();
   }
 
@@ -64,5 +66,31 @@ export class TankRuntime extends Runtime {
     this.tankUtils.drive(this.tanks.red, signal);
     this.tankUtils.drive(this.tanks.yellow, signal);
     this.tankUtils.drive(this.tanks.green, signal);
+  }
+
+  setMonitorValue(label, value) {
+    if (label) {
+      const monitor = label.getAttr('monitor');
+      if (!value) {
+        const target = this.querySelector(`#${monitor.groupId}`);
+        if (target) {
+          switch (monitor.id) {
+            case 'motion_xposition':
+              value = Math.round(target.x());
+              break;
+            case 'motion_yposition':
+              value = Math.round(target.y());
+              break;
+            case 'motion_direction':
+              value = Math.round(MathUtils.wrapClamp(-target.getAttr('tank').rotation(), -179, 180));
+              break;
+            default:
+              value = 0;
+              break;
+          }
+        }
+      }
+      super.setMonitorValue(label, value);
+    }
   }
 }

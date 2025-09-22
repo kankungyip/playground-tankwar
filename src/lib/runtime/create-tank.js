@@ -50,6 +50,7 @@ export function createTank(scaleX, scaleY, id, visible = false) {
   // 坦克车身
   const tank = new Konva.Image({
     tankUnit,
+    name: 'tank',
     scaleX: scaleX,
     scaleY: scaleY,
   });
@@ -90,6 +91,7 @@ export function createTank(scaleX, scaleY, id, visible = false) {
   // 坦克炮台
   const turret = new Konva.Image({
     tankUnit,
+    name: 'turret',
     scaleX: scaleX,
     scaleY: scaleY,
   });

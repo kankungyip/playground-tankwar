@@ -63,7 +63,12 @@ export default {
     DEBUG
       ? {
           ...codeReviewTab,
-          Content: CodeReview,
+          Content: () => (
+            <CodeReview
+              readOnly
+              keyName="script"
+            />
+          ),
         }
       : [],
   ),
