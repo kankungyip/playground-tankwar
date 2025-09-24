@@ -28,8 +28,8 @@ const resetTank = (tankUnit, x, y, rotation) => {
     cooldown: null,
   });
 
-  tankUnit.getAttr('broken')?.setAttr?.('visible', false);
-  tankUnit.getAttr('radar')?.setAttr?.('visible', false);
+  tankUnit.getAttr('broken')?.setAttr('visible', false);
+  tankUnit.getAttr('radar')?.setAttr('visible', false);
 
   const tank = tankUnit.getAttr('tank');
   const turret = tankUnit.getAttr('turret');
@@ -74,19 +74,19 @@ export function TankEmulator() {
     if (!appState.value) return;
     if (!runtime.value?.tanks) return;
 
-    resetTank(runtime.value.tanks.player, -180, 180, -135)?.setAttrs?.({
+    resetTank(runtime.value.tanks.player, -180, 180, -135)?.setAttrs({
       name: file.value.name,
       zIndex: 3,
     });
-    resetTank(runtime.value.tanks.red, 180, -180, 45)?.setAttr?.('visible', appState.value.enemies > 0);
-    resetTank(runtime.value.tanks.yellow, 180, 180, 135)?.setAttr?.('visible', appState.value.enemies > 1);
-    resetTank(runtime.value.tanks.green, -180, -180, -45)?.setAttr?.('visible', appState.value.enemies > 2);
+    resetTank(runtime.value.tanks.red, 180, -180, 45)?.setAttr('visible', appState.value.enemies > 0);
+    resetTank(runtime.value.tanks.yellow, 180, 180, 135)?.setAttr('visible', appState.value.enemies > 1);
+    resetTank(runtime.value.tanks.green, -180, -180, -45)?.setAttr('visible', appState.value.enemies > 2);
     runtime.value.updateMonitors(meta.value.monitors);
   }, []);
 
   // 变量监视
   useEffect(async () => {
-    runtime.value?.updateMonitors?.(meta.value.monitors);
+    runtime.value?.updateMonitors(meta.value.monitors);
   }, [meta.value]);
 
   // 运行模拟器

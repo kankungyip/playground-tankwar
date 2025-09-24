@@ -56,7 +56,7 @@ export function StageInfo() {
             className={classNames(styles.healthProgress, {
               [styles.small]: appState.value?.stageSize !== 'large',
             })}
-            style={`--percent:${appState.value?.running ? appState.value?.tanks?.[0]?.health : 100}`}
+            style={`--percent:${appState.value?.running ? appState.value?.tanks[0]?.health : 100}`}
           />
         </Label>
       </div>
@@ -96,7 +96,7 @@ export function StageInfo() {
         )}
       </div>
 
-      {appState.value?.tanks?.slice?.(1, appState.value?.enemies + 1)?.map?.((tank, index) => (
+      {appState.value?.tanks.slice(1, appState.value?.enemies + 1)?.map((tank, index) => (
         <div
           className={styles.row}
           key={index}

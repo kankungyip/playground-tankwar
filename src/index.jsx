@@ -33,14 +33,14 @@ export default {
   onUndo(e) {
     if (e instanceof MouseEvent) {
       const workspace = ScratchBlocks.getMainWorkspace();
-      workspace?.undo?.(false);
+      workspace?.undo(false);
     }
   },
 
   onRedo(e) {
     if (e instanceof MouseEvent) {
       const workspace = ScratchBlocks.getMainWorkspace();
-      workspace?.undo?.(true);
+      workspace?.undo(true);
     }
   },
 

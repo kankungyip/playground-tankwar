@@ -12,7 +12,7 @@ export function Toolbar() {
   const { appState } = useAppContext();
 
   const handleFight = useCallback(() => {
-    let tanks = appState.value?.tanks?.map?.((tank) => ({ ...tank, health: 100 }));
+    let tanks = appState.value?.tanks.map((tank) => ({ ...tank, health: 100 }));
     setAppState({
       tanks,
       running: !!tanks,
