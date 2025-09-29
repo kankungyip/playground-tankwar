@@ -1,4 +1,4 @@
-import { sleepMs, MathUtils } from '@blockcode/utils';
+import { MathUtils, ScriptController } from '@blockcode/utils';
 import { Runtime } from '@blockcode/blocks';
 import { TankUtils } from './tank-utils';
 
@@ -14,9 +14,7 @@ export class TankRuntime extends Runtime {
 
     // 坦克
     this._tanks = new Proxy(stage, {
-      get(_, prop) {
-        return stage.findOne(`#${prop}`);
-      },
+      get: (_, prop) => stage.findOne(`#${prop}`),
     });
   }
 
@@ -46,7 +44,7 @@ export class TankRuntime extends Runtime {
       }
       if (typeof isGreater === 'boolean') {
         if (isGreater && !this._thresholds.get(key)) {
-          this.run(`threshold:${key}`);
+          this.call(`threshold:${key}`);
         }
         this._thresholds.set(key, isGreater);
       }
@@ -61,11 +59,12 @@ export class TankRuntime extends Runtime {
     super.stop();
   }
 
-  drives(signal) {
-    this.tankUtils.drive(this.tanks.player, signal);
-    this.tankUtils.drive(this.tanks.red, signal);
-    this.tankUtils.drive(this.tanks.yellow, signal);
-    this.tankUtils.drive(this.tanks.green, signal);
+  drives() {
+    const scripter = new ScriptController();
+    this.tankUtils.drive(scripter, this.tanks.player);
+    this.tankUtils.drive(scripter, this.tanks.red);
+    this.tankUtils.drive(scripter, this.tanks.yellow);
+    this.tankUtils.drive(scripter, this.tanks.green);
   }
 
   setMonitorValue(label, value) {

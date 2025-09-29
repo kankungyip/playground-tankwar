@@ -152,8 +152,7 @@ export function TankEmulator() {
     runtime.value.spritesLayer.add(createTank(scaleX, scaleY, 'green'));
 
     // 坦克根据设定的速度每帧前进
-    const abortController = runtime.value.createAbortController();
-    runtime.value.on('frame', () => runtime.value.drives(abortController.signal));
+    runtime.value.on('frame', () => runtime.value.drives());
 
     return () => {
       runtime.value = null;

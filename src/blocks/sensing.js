@@ -21,7 +21,8 @@ export default () => ({
       },
       emu(block) {
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || 90;
-        const code = `(await tankUtils.scan(target, ${directionValue}) !== Infinity)`;
+        const code = `(await tankUtils.scan(userscript, target, ${directionValue}) !== Infinity)`;
+        this._guardLoop = this.GUARD_LOOP_DISABLE;
         return [code, this.ORDER_EQUALITY];
       },
     },
@@ -38,7 +39,8 @@ export default () => ({
       },
       emu(block) {
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || 90;
-        const code = `(await tankUtils.scan(target, ${directionValue}))`;
+        const code = `(await tankUtils.scan(userscript, target, ${directionValue}))`;
+        this._guardLoop = this.GUARD_LOOP_DISABLE;
         return [code, this.ORDER_FUNCTION_CALL];
       },
     },

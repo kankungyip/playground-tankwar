@@ -101,8 +101,8 @@ export class TankUtils extends EventEmitter {
   }
 
   // 启动坦克
-  drive(tankUnit, signal) {
-    if (!this.running) return;
+  drive(scripter, tankUnit) {
+    if (scripter.aborted) return;
     if (!tankUnit.visible()) return;
 
     const tank = tankUnit.getAttr('tank');
@@ -117,8 +117,19 @@ export class TankUtils extends EventEmitter {
     }
 
     // 对齐炮台和车身
-    if (!tankUnit.getAttr('cooldown') && !turret.getAttr('tween') && tank.rotation() !== turret.rotation()) {
-      this._turn(turret, signal, tank.rotation());
+    const rotation = tank.rotation();
+    if (!tankUnit.getAttr('cooldown') && !turret.getAttr('tween') && rotation !== turret.rotation()) {
+      scripter.execute(this._turn.bind(this), turret, rotation).then(() => {
+        const tween = turret.getAttr('tween');
+        turret.setAttr('tween', null);
+        if (tween) {
+          tween.pause();
+          // tween.destroy();
+        }
+        if (!this.running) {
+          turret.rotation(tank.rotation());
+        }
+      });
     }
 
     // [TODO] 冒烟的坦克
@@ -126,14 +137,14 @@ export class TankUtils extends EventEmitter {
     // 碰到边缘停止
     const nearestEdge = this._findNearestEdge(tank);
     if (nearestEdge) {
-      this.setSpeed(tankUnit, 0);
+      this.stop(tankUnit);
     }
 
     // 碰到坦克停止
     this.spritesLayer.children.some((enemyUnit) => {
       if (enemyUnit === tankUnit || !enemyUnit.visible()) return;
       if (KonvaUtils.checkConvexHullsCollision(tankUnit, enemyUnit)) {
-        this.setSpeed(tankUnit, 0);
+        this.stop(tankUnit);
       }
     });
 
@@ -141,7 +152,6 @@ export class TankUtils extends EventEmitter {
     const speedValue = tankUnit.getAttr('speed');
     if (!speedValue) return;
 
-    const rotation = tankUnit.getAttr('tank').rotation();
     const radian = MathUtils.degToRad(rotation - 90);
     const dx = -speedValue * Math.cos(radian);
     const dy = -speedValue * Math.sin(radian);
@@ -154,18 +164,17 @@ export class TankUtils extends EventEmitter {
   }
 
   // 面向方向速度
-  move(tankUnit, signal, direction, speed) {
-    if (!this.running) return;
+  move(userscript, tankUnit, direction, speed) {
+    if (userscript.aborted) return;
     if (!tankUnit.visible()) return;
     if (tankUnit.getAttr('health') <= 0) return;
-    this.setSpeed(tankUnit, speed);
-    return this.setDirection(tankUnit, signal, direction);
+    this.setSpeed(userscript, tankUnit, speed);
+    return this.setDirection(userscript, tankUnit, direction);
   }
 
   // 车身/炮台转向
   // 每秒转动72度
-  _turn(target, signal, rotation) {
-    if (!this.running) return;
+  _turn(target, rotation) {
     if (!target.visible()) return;
     if (target.getAttr('tween')) return;
 
@@ -176,35 +185,12 @@ export class TankUtils extends EventEmitter {
     }
 
     return new Promise((resolve) => {
-      // 中止动画
-      const handleAbort = () => {
-        const tween = target.getAttr('tween');
-        if (tween) {
-          target.setAttr('tween', null);
-          tween.reset();
-          tween.destroy();
-        }
-
-        signal.off('abort', handleAbort);
-        resolve();
-      };
-      signal.once('abort', handleAbort);
-
       const tween = new Konva.Tween({
         node: target,
         rotation,
         duration: SECOND_PER_DEGREE * Math.abs(rotation - target.rotation()),
         easing: Konva.Easings.Linear,
-        onFinish: () => {
-          const tween = target.getAttr('tween');
-          if (tween) {
-            target.setAttr('tween', null);
-            tween.destroy();
-          }
-
-          signal.off('abort', handleAbort);
-          resolve();
-        },
+        onFinish: () => resolve(),
         onUpdate: () => {
           const tankUnit = target.getAttr('tankUnit');
           if (target.hasName('tank')) {
@@ -218,12 +204,19 @@ export class TankUtils extends EventEmitter {
   }
 
   // 设定方向
-  setDirection(tankUnit, signal, direction) {
-    if (!this.running) return;
+  async setDirection(userscript, tankUnit, direction) {
+    if (userscript.aborted) return;
     if (!tankUnit.visible()) return;
     if (tankUnit.getAttr('health') <= 0) return;
     const directionValue = -MathUtils.toNumber(direction);
-    return this._turn(tankUnit.getAttr('tank'), signal, directionValue);
+    const tank = tankUnit.getAttr('tank');
+    await userscript.scripter.execute(this._turn.bind(this), tank, directionValue);
+    if (tank.getAttr('tween')) {
+      const tween = tank.getAttr('tween');
+      tank.setAttr('tween', null);
+      tween.pause();
+      // tween.destroy();
+    }
   }
 
   // 获得方向
@@ -232,24 +225,25 @@ export class TankUtils extends EventEmitter {
   }
 
   // 右转
-  turnRight(tankUnit, signal, angle) {
-    if (!this.running) return;
+  turnRight(userscript, tankUnit, angle) {
+    if (userscript.aborted) return;
     if (!tankUnit.visible()) return;
     if (tankUnit.getAttr('health') <= 0) return;
     const angleValue = MathUtils.toNumber(angle);
     const direction = -tankUnit.getAttr('tank').rotation() + angleValue;
-    return this.setDirection(tankUnit, signal, direction);
+    return this.setDirection(userscript, tankUnit, direction);
   }
 
   // 左转
-  turnLeft(tankUnit, signal, angle) {
+  turnLeft(userscript, tankUnit, angle) {
+    if (userscript.aborted) return;
     const angleValue = MathUtils.toNumber(angle);
-    return this.turnRight(tankUnit, signal, -angleValue);
+    return this.turnRight(userscript, tankUnit, -angleValue);
   }
 
   // 设定速度
-  setSpeed(tankUnit, speed) {
-    if (!this.running) return;
+  setSpeed(userscript, tankUnit, speed) {
+    if (userscript.aborted) return;
     if (!tankUnit.visible()) return;
     if (tankUnit.getAttr('health') <= 0) return;
     const speedValue = MathUtils.toNumber(speed);
@@ -265,11 +259,11 @@ export class TankUtils extends EventEmitter {
 
   // 停止
   stop(tankUnit) {
-    this.setSpeed(tankUnit, 0);
+    tankUnit.setAttr('speed', 0);
+    this.runtime.setMonitorValueById(`${tankUnit.id()}.motion_speed`, 0);
   }
 
   _hit(tankUnit, bullet) {
-    if (!this.running) return;
     if (!tankUnit.visible()) return;
 
     // 不打自己坦克
@@ -298,8 +292,6 @@ export class TankUtils extends EventEmitter {
 
   // 炮弹爆炸
   _boom(bullet) {
-    if (!this.running) return;
-
     // 载入爆炸动画
     const boom = new Konva.Sprite({
       x: bullet.x(),
@@ -320,90 +312,38 @@ export class TankUtils extends EventEmitter {
       frameIndex: 0,
     });
     this.boardLayer.add(boom);
+    bullet.setAttr('boom', boom);
 
     // 爆炸动画
-    boom.start();
-    boom.animation('boom');
-    boom.on('frameIndexChange.button', () => {
-      if (boom.frameIndex() === 2) {
-        setTimeout(() => {
-          boom.off('.button');
-          boom.destroy();
-        }, 1000 / boom.frameRate());
-      }
+    return new Promise((resolve) => {
+      bullet.visible(false);
+
+      boom.on('frameIndexChange.button', () => {
+        if (boom.frameIndex() === 2) {
+          setTimeout(resolve, 1000 / boom.frameRate());
+        }
+      });
+      boom.animation('boom');
+      boom.start();
+
+      // 检测碰撞
+      this._hit(this.tanks.player, bullet);
+      this._hit(this.tanks.red, bullet);
+      this._hit(this.tanks.yellow, bullet);
+      this._hit(this.tanks.green, bullet);
+
+      this.runtime.watchHealth([
+        this.tanks.player.getAttr('health'),
+        this.tanks.red.getAttr('health'),
+        this.tanks.yellow.getAttr('health'),
+        this.tanks.green.getAttr('health'),
+      ]);
     });
-    bullet.visible(false);
-
-    // 检测碰撞
-    this._hit(this.tanks.player, bullet);
-    this._hit(this.tanks.red, bullet);
-    this._hit(this.tanks.yellow, bullet);
-    this._hit(this.tanks.green, bullet);
-
-    bullet.destroy();
-
-    this.runtime.watchHealth([
-      this.tanks.player.getAttr('health'),
-      this.tanks.red.getAttr('health'),
-      this.tanks.yellow.getAttr('health'),
-      this.tanks.green.getAttr('health'),
-    ]);
   }
 
-  // 开火
-  attack(tankUnit, signal, direction, distance) {
-    if (!this.running) return;
-    if (!tankUnit.visible()) return;
-    if (tankUnit.getAttr('health') <= 0) return;
-
-    const tank = tankUnit.getAttr('tank');
-    const turret = tankUnit.getAttr('turret');
-
+  // 让子弹飞
+  _ballistic(tankUnit, bullet, direction, distance) {
     return new Promise(async (resolve) => {
-      // 中止开火
-      const handleAbort = () => {
-        handleAbort.stopped = true;
-
-        // 销毁炮弹
-        const bullet = turret.getAttr('bullet');
-        const tween = bullet.getAttr('tween');
-        if (tween) {
-          tween.pause();
-          tween.destroy();
-          bullet.destroy();
-        }
-
-        signal.off('abort', handleAbort);
-        resolve();
-      };
-      signal.once('abort', handleAbort);
-
-      // 加载跑弹
-      const bullet = new Konva.Image({
-        tankUnit,
-        name: 'boom',
-        image: this._bulletImage,
-        offsetX: this._bulletImage.width / 2,
-        offsetY: this._bulletImage.height / 2,
-        scale: tank.scale(),
-        visible: false,
-      });
-      this.boardLayer.add(bullet);
-      turret.setAttr('bullet', bullet);
-
-      // 转动炮台
-      // 中止之前的转动
-      if (turret.getAttr('tween')) {
-        const tween = turret.getAttr('tween');
-        turret.setAttr('tween', null);
-        tween.pause();
-        tween.destroy();
-      }
-      const directionValue = -MathUtils.toNumber(direction);
-      await this._turn(turret, signal, directionValue);
-
-      if (handleAbort.stopped) return;
-
       // 炮弹冷却
       if (tankUnit.getAttr('cooldown')) {
         clearTimeout(tankUnit.getAttr('cooldown'));
@@ -414,7 +354,7 @@ export class TankUtils extends EventEmitter {
       );
 
       // 发射跑弹
-      const radian = MathUtils.degToRad(directionValue - 90);
+      const radian = MathUtils.degToRad(direction - 90);
 
       // 跑弹离开炮台位置
       bullet.setAttrs({
@@ -424,16 +364,15 @@ export class TankUtils extends EventEmitter {
       });
 
       // 移动跑弹
-      const distanceValue = MathUtils.clamp(MathUtils.toNumber(distance), MIN_BULLET_DISTANCE, MAX_BULLET_DISTANCE);
-      const dx = -distanceValue * Math.cos(radian);
-      const dy = -distanceValue * Math.sin(radian);
+      const dx = -distance * Math.cos(radian);
+      const dy = -distance * Math.sin(radian);
       const x = bullet.x() + dx;
       const y = bullet.y() + dy;
-      const duration = distanceValue / this._bulletSpeed / this.runtime.fps;
+      const duration = distance / this._bulletSpeed / this.runtime.fps;
 
       // 跑弹飞行缩放
       const start = Date.now();
-      const scaling = this._bulletSpeed / distanceValue / 2;
+      const scaling = this._bulletSpeed / distance / 2;
 
       const tween = new Konva.Tween({
         x,
@@ -441,6 +380,7 @@ export class TankUtils extends EventEmitter {
         duration,
         node: bullet,
         easing: Konva.Easings.EaseInOut,
+        onFinish: () => resolve(),
         onUpdate: () => {
           let scale = bullet.scaleX() + scaling;
           if (Date.now() - start > (duration / 2) * 1000) {
@@ -451,25 +391,78 @@ export class TankUtils extends EventEmitter {
             scaleY: scale,
           });
         },
-        onFinish: () => {
-          this._boom(bullet);
-          const tween = bullet.getAttr('tween');
-          bullet.setAttr('tween', null);
-          tween.destroy();
-        },
       });
       bullet.setAttr('tween', tween);
       tween.play();
-
-      await sleep(1);
-      signal.off('abort', handleAbort);
-      resolve();
     });
+  }
+
+  // 开火
+  async attack(userscript, tankUnit, direction, distance) {
+    if (userscript.aborted) return;
+    if (!tankUnit.visible()) return;
+    if (tankUnit.getAttr('health') <= 0) return;
+
+    const tank = tankUnit.getAttr('tank');
+    const turret = tankUnit.getAttr('turret');
+    const scripter = userscript.scripter;
+    const directionValue = -MathUtils.toNumber(direction);
+    const distanceValue = MathUtils.clamp(MathUtils.toNumber(distance), MIN_BULLET_DISTANCE, MAX_BULLET_DISTANCE);
+
+    // 转动炮台
+    // 中止之前的转动
+    if (turret.getAttr('tween')) {
+      const tween = turret.getAttr('tween');
+      turret.setAttr('tween', null);
+      tween.pause();
+      // tween.destroy();
+    }
+    await scripter.execute(this._turn.bind(this), turret, directionValue);
+    if (turret.getAttr('tween')) {
+      const tween = turret.getAttr('tween');
+      turret.setAttr('tween', null);
+      tween.pause();
+      // tween.destroy();
+    }
+
+    if (userscript.aborted) return;
+
+    // 加载炮弹
+    const bullet = new Konva.Image({
+      tankUnit,
+      name: 'boom',
+      image: this._bulletImage,
+      offsetX: this._bulletImage.width / 2,
+      offsetY: this._bulletImage.height / 2,
+      scale: tank.scale(),
+      visible: false,
+    });
+    this.boardLayer.add(bullet);
+
+    // 弹道
+    await scripter.execute(this._ballistic.bind(this), tankUnit, bullet, directionValue, distanceValue);
+    if (bullet.getAttr('tween')) {
+      const tween = bullet.getAttr('tween');
+      bullet.setAttr('tween', null);
+      tween.pause();
+      // tween.destroy();
+      // bullet.destroy();
+    }
+
+    if (userscript.aborted) return;
+
+    // 爆炸
+    await scripter.execute(this._boom.bind(this), bullet);
+    if (bullet.getAttr('boom')) {
+      const boom = bullet.getAttr('boom');
+      boom.off('.button');
+      boom.destroy();
+      bullet.destroy();
+    }
   }
 
   // 检查是否被扫描到物体/坦克
   _catch(target, radar) {
-    if (!this.running) return;
     if (!target.visible()) return;
 
     // 不扫描自己
@@ -496,8 +489,8 @@ export class TankUtils extends EventEmitter {
   }
 
   // 雷达扫描
-  async scan(tankUnit, direction) {
-    if (!this.running) return;
+  async scan(userscript, tankUnit, direction) {
+    if (userscript.aborted) return;
     if (!tankUnit.visible()) return;
     if (tankUnit.getAttr('health') <= 0) return;
 
