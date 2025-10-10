@@ -27,7 +27,6 @@ export default () => ({
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || '0';
         const distanceValue = this.valueToCode(block, 'DISTANCE', this.ORDER_NONE) || '100';
         const code = `await tankUtils.attack(userscript, target, ${directionValue}, ${distanceValue});\n`;
-        this._guardLoop = this.GUARD_LOOP_DISABLE;
         return code;
       },
     },
@@ -49,7 +48,6 @@ export default () => ({
         const directionValue = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || '0';
         const speedvalue = this.valueToCode(block, 'SPEED', this.ORDER_NONE) || '100';
         const code = `await tankUtils.move(userscript, target, ${directionValue}, ${speedvalue});\n`;
-        this._guardLoop = this.GUARD_LOOP_DISABLE;
         return code;
       },
     },
@@ -71,7 +69,6 @@ export default () => ({
       emu(block) {
         const degreesCode = this.valueToCode(block, 'DEGREES', this.ORDER_NONE) || 0;
         const code = `await tankUtils.turnRight(userscript, target, ${degreesCode});\n`;
-        this._guardLoop = this.GUARD_LOOP_DISABLE;
         return code;
       },
     },
@@ -92,7 +89,6 @@ export default () => ({
       emu(block) {
         const degreesCode = this.valueToCode(block, 'DEGREES', this.ORDER_NONE) || 0;
         const code = `await tankUtils.turnLeft(userscript, target, ${degreesCode});\n`;
-        this._guardLoop = this.GUARD_LOOP_DISABLE;
         return code;
       },
     },
@@ -109,7 +105,6 @@ export default () => ({
       emu(block) {
         const directionCode = this.valueToCode(block, 'DIRECTION', this.ORDER_NONE) || '0';
         const code = `await tankUtils.setDirection(userscript, target, ${directionCode});\n`;
-        this._guardLoop = this.GUARD_LOOP_DISABLE;
         return code;
       },
     },
