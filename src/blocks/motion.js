@@ -179,7 +179,7 @@ export default () => ({
     {
       // 攻击距离
       id: 'distancevalue',
-      inline: true,
+      shadow: true,
       output: 'number',
       inputs: {
         DISTANCE: {
@@ -196,7 +196,7 @@ export default () => ({
     {
       // 速度百分比
       id: 'speedvalue',
-      inline: true,
+      shadow: true,
       output: 'number',
       inputs: {
         SPEED: {
