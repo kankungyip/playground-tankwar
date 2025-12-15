@@ -54,24 +54,32 @@ export default {
     return workspace?.redoStack_ && workspace.redoStack_.length !== 0;
   },
 
+  menuItems: [
+    {
+      id: 'edit',
+      disabledCoding: true,
+    },
+    {
+      id: 'view',
+      disabled: true,
+    },
+  ],
+
   tabs: [
     {
       ...blocksTab,
       Content: TankBlocksEditor,
     },
-  ].concat(
-    DEBUG
-      ? {
-          ...codeReviewTab,
-          Content: () => (
-            <CodeReview
-              readOnly
-              keyName="script"
-            />
-          ),
-        }
-      : [],
-  ),
+    DEBUG && {
+      ...codeReviewTab,
+      Content: () => (
+        <CodeReview
+          readOnly
+          keyName="script"
+        />
+      ),
+    },
+  ].filter(Boolean),
 
   docks: [
     {
