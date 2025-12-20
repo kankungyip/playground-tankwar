@@ -1,40 +1,29 @@
 export const simple = `
-const controller = runtime.createAbortController();
-const signal = controller.signal;
+const scripter = new ScriptController();
 
 runtime.when('start', (done) => {
-  const funcId = 'simple-ai-tank';
-  const warpMode = runtime.warpMode;
-  return new Promise(async (resolve) => {
-    let forceWait = Date.now();
-    let renderMode = false;
-    const handleAbort = (skipId) => {
-      if (funcId === skipId) return;
-      signal.off('abort', handleAbort);
-      handleAbort.stopped = true;
-      resolve();
-    };
-    signal.once('abort', handleAbort);
-    while (true) {
-      if (renderMode && !warpMode) {
-        await runtime.nextFrame();
-        forceWait = Date.now();
-        renderMode = false;
-      }
-      await tankUtils.attack(target, signal, 0, MathUtils.random(5, 15) * 10);
-      await tankUtils.attack(target, signal, 330, MathUtils.random(5, 15) * 10);
-      await tankUtils.attack(target, signal, 300, MathUtils.random(5, 15) * 10);
-      await tankUtils.attack(target, signal, 270, MathUtils.random(5, 15) * 10);
-      await tankUtils.attack(target, signal, 300, MathUtils.random(5, 15) * 10);
-      await tankUtils.attack(target, signal, 330, MathUtils.random(5, 15) * 10);
-      if (handleAbort.stopped) break;
-      if ((!renderMode && !warpMode) || Date.now() - forceWait > 300) {
-        await runtime.nextTick();
-        forceWait = Date.now();
-      }
+const userscript = async () => {
+  while (true) {
+    if (userscript.aborted) return;
+    for (let i0 = 0; i0 < 2; i0++) {
+      if (userscript.aborted) return;
+      await tankUtils.turnRight(userscript, target, 20);
+      await tankUtils.attack(userscript, target, tankUtils.getDirection(target), MathUtils.random(5, 15) * 10);
     }
-    signal.off('abort', handleAbort);
-    resolve();
-  }).then(done).catch(done);
+    for (let i1 = 0; i1 < 4; i1++) {
+      if (userscript.aborted) return;
+      await tankUtils.turnLeft(userscript, target, 20);
+      await tankUtils.attack(userscript, target, tankUtils.getDirection(target), MathUtils.random(5, 15) * 10);
+    }
+    for (let i2 = 0; i2 < 2; i2++) {
+      if (userscript.aborted) return;
+      await tankUtils.turnRight(userscript, target, 20);
+      await tankUtils.attack(userscript, target, tankUtils.getDirection(target), MathUtils.random(5, 15) * 10);
+    }
+  }
+};
+userscript.i = 0;
+userscript.warpMode = runtime.warpMode;
+return scripter.execute(userscript).then(done).catch(done);
 });
 `;
